@@ -3,8 +3,17 @@
 (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/"))
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
-;; (package-initialize)
 
+; ---------------------------
+; [ Auto install packages ]
+; ---------------------------
+;; (package-initialize)
+(when (not package-archive-contents)
+  (package-refresh-contents))
+(defvar my-packages '(haskell-mode go-mode spacemacs-theme moe-theme solarized-theme evil-commentary magit ace-jump-mode org-bullets org-present exec-path-from-shell company all-the-icons-ivy neotree doom-themes evil markdown-mode))
+(dolist (p my-packages)
+  (when (not(package-installed-p p))
+    (package-install p)))
 
 ; ---------------------------
 ; [ General settings ]
@@ -22,7 +31,6 @@
 
 ; Spaces instead of tabs
 (setq-default indent-tabs-mode nil)
-
 
 ;(global-display-line-numbers-mode 1) ;native line numbers mode:
 
@@ -50,6 +58,11 @@
 
 (setq latex-run-command "texi2dvi")
 
+; ---------------------------
+; [ Doc-View ]
+; ---------------------------
+
+(add-hook 'doc-view-mode-hook 'auto-revert-mode)
 
 ; ---------------------------
 ; [ Dashboard ]
@@ -58,7 +71,6 @@
 (use-package dashboard)
 (dashboard-setup-startup-hook)
 
-; Dashboard
 (setq dashboard-startup-banner 'logo)
 
 (setq dashboard-banner-logo-title "Welcome to Emacs yo!")
