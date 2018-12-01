@@ -28,7 +28,9 @@
   (setq auto-package-update-hide-results t)
   (auto-package-update-maybe))
 
-; Packages
+; ---------------------------
+; [ Packages ]
+; ---------------------------
 
 (use-package magit)
 (use-package ace-jump-mode)
@@ -60,24 +62,15 @@
 
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
-
 ; Spaces instead of tabs
 (setq-default indent-tabs-mode nil)
-
 ;(global-display-line-numbers-mode 1) ;native line numbers mode:
-
 (ido-mode 1)
-
 (set-frame-font "Menlo 14" nil t)
-
 (setq ring-bell-function 'ignore)
-
 (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
-
 (pixel-scroll-mode t)
-
 (setq scroll-step 1) ;; keyboard scroll one line at a time
-
 (setq mac-option-key-is-meta t)
 (setq mac-right-option-modifier nil)
 
@@ -102,9 +95,7 @@
 (use-package dashboard
   :config
   (dashboard-setup-startup-hook)
-
   (setq dashboard-startup-banner 'logo)
-
   (setq dashboard-banner-logo-title "Welcome to Emacs yo!")
 
   (setq dashboard-items '((recents  . 6)
@@ -112,7 +103,7 @@
                           ;(projects . 5)
                           (agenda . t)))
 
-  (defun dashboard-insert-custom (x) (insert "Custom text"))
+  (defun dashboard-insert-custom (x) (insert "hmmmmmmm"))
   (add-to-list 'dashboard-item-generators  '(custom . dashboard-insert-custom))
   (add-to-list 'dashboard-items '(custom) t))
 
@@ -221,3 +212,4 @@
   (define-key company-active-map [tab] 'company-complete)
   (define-key company-active-map (kbd "C-n") 'company-select-next)
   (define-key company-active-map (kbd "C-p") 'company-select-previous))
+
