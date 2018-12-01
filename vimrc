@@ -5,17 +5,11 @@
 call plug#begin('~/.vim/plugged')
 
 Plug 'scrooloose/nerdtree'
-
 Plug 'flazz/vim-colorschemes'
-
 Plug 'tpope/vim-commentary'
-
 Plug 'tpope/vim-surround'
-
 Plug 'ctrlpvim/ctrlp.vim'
-
 Plug 'Raimondi/delimitMate'
-
 " Plug 'ervandew/supertab'
 
 " Initialize plugin system
@@ -38,10 +32,9 @@ set noerrorbells visualbell t_vb=
 autocmd GUIEnter * set visualbell t_vb=
 
 set ignorecase
-
 filetype plugin indent on
 
-" autoreload file (changed somewhere else)
+" autoreload file
 set autoread
 
 " :find  search path
@@ -53,7 +46,7 @@ set splitright
 
 autocmd FileType vim setlocal foldmethod=marker
 
-set incsearch " hopp til ord mens skriver i søk /
+set incsearch " jump to word while searching /
 "set hlsearch "highlight search results
 
 " share clipboard with system clipboard
@@ -65,12 +58,6 @@ set tabstop=4
 set shiftwidth=4
 "set softtabstop=4
 set smarttab
-
-"test cactus highlighting:
-" au BufRead,BufNewFile *.cactus set filetype=cactus
-
-" oz higlighting
-"au BufNewFile,BufRead *.oz set filetype=oz
 
 "}}}
 
@@ -89,7 +76,7 @@ set smarttab
 " make underscore behave exactly like carrot to move to first non-whitespace character
 map _ ^
 
-" scroll med ALT-J  og   ALT-K
+" scroll with ALT-J and ALT-K
 nmap √ <C-E>
 nmap ª <C-Y>
 " accelerate scrolling
