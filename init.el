@@ -196,7 +196,6 @@
                  (org-present-show-cursor)
                  (org-present-read-write)))))
 
-
 ;; ---------------------------
 ;; [ Evil ]
 ;; ---------------------------
