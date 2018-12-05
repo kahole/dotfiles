@@ -1,5 +1,5 @@
-;(require 'package)
-;(package-initialize)
+;; (require 'package)
+;; (package-initialize)
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa-stable" . "https://stable.melpa.org/packages/")
@@ -11,105 +11,148 @@
         ("org" . 5)
         ("melpa" . 0)))
 
-; For portability to emacs versions without use-package already installed
+;; For portability to emacs versions without use-package already installed
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
 
 (require 'use-package)
 
-; Auto install packages
+;; Auto install packages
 (setq use-package-always-ensure t)
 
-; Auto update
+;; Auto update
 (use-package auto-package-update
   :config
   (setq auto-package-update-delete-old-versions t)
   (setq auto-package-update-hide-results t)
-  (auto-package-update-maybe))
+  (auto-package-update-maybe));
 
-; ---------------------------
-; [ Packages ]
-; ---------------------------
+;; ---------------------------
+;; [ General settings ]
+;; ---------------------------
+
+(add-to-list 'default-frame-alist '(height . 66))
+(add-to-list 'default-frame-alist '(width . 160))
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+;; Options (light|dark) dark theme use light, vice versa
+(add-to-list 'default-frame-alist '(ns-appearance . light))
+
+;; show matching parenthesis
+(show-paren-mode 1)
+
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+;; Spaces instead of tabs
+(setq-default indent-tabs-mode nil)
+;;(global-display-line-numbers-mode 1) ;native line numbers mode:
+
+;; ido
+(setq ido-enable-flex-matching t)
+(ido-mode 1)
+(ido-everywhere t)
+
+(set-frame-font "Menlo 14" nil t)
+(setq ring-bell-function 'ignore)
+(setq mouse-wheel-follow-mouse 't) ; scroll window under mouse
+(pixel-scroll-mode t)
+(setq scroll-step 1) ; keyboard scroll one line at a time
+(setq mac-option-key-is-meta t)
+(setq mac-option-modifier 'meta)
+(setq mac-right-option-modifier nil)
+
+(setq load-prefer-newer t)
+
+
+;; ---------------------------
+;; [ Packages ]
+;; ---------------------------
 
 (use-package magit)
 (use-package ace-jump-mode)
 
+(use-package ido-vertical-mode
+  :config
+  (ido-vertical-mode 1))
+
+;; (use-package focus)
+
+(use-package restclient)
+
+(use-package which-key
+  :config
+  (which-key-mode))
+
 (use-package markdown-mode)
-(use-package haskell-mode)
-(use-package go-mode)
+;; (use-package haskell-mode)
+;; (use-package go-mode)
 
 (use-package doom-themes)
 (use-package spacemacs-theme :defer t :init (load-theme 'spacemacs-light t))
 (use-package moe-theme)
 (use-package solarized-theme)
-;(use-package all-the-icons)
+;; (use-package all-the-icons)
 (use-package all-the-icons-ivy)
 
 (use-package exec-path-from-shell
   :config
   (exec-path-from-shell-initialize))
 
-; ---------------------------
-; [ General settings ]
-; ---------------------------
-
-(add-to-list 'default-frame-alist '(height . 66))
-(add-to-list 'default-frame-alist '(width . 160))
-(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-; Options (light|dark) dark theme use light, vice versa
-(add-to-list 'default-frame-alist '(ns-appearance . light))
-
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-; Spaces instead of tabs
-(setq-default indent-tabs-mode nil)
-;(global-display-line-numbers-mode 1) ;native line numbers mode:
-(ido-mode 1)
-(set-frame-font "Menlo 14" nil t)
-(setq ring-bell-function 'ignore)
-(setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
-(pixel-scroll-mode t)
-(setq scroll-step 1) ;; keyboard scroll one line at a time
-(setq mac-option-key-is-meta t)
-(setq mac-right-option-modifier nil)
-
-; ---------------------------
-; [ LaTex ]
-; ---------------------------
+;; ---------------------------
+;; [ LaTex ]
+;; ---------------------------
 
 (setq latex-run-command "texi2dvi")
 
-; ---------------------------
-; [ Doc-View ]
-; ---------------------------
+;; ---------------------------
+;; [ Doc-View ]
+;; ---------------------------
 
 (setq doc-view-resolution 800)
-; Auto reload on file changed
+;; Auto reload on file changed
 (add-hook 'doc-view-mode-hook 'auto-revert-mode)
 
-; ---------------------------
-; [ Dashboard ]
-; ---------------------------
+;; ---------------------------
+;; [ Dashboard ]
+;; ---------------------------
 
 (use-package dashboard
   :config
-  (dashboard-setup-startup-hook)
   (setq dashboard-startup-banner 'logo)
   (setq dashboard-banner-logo-title "Welcome to Emacs yo!")
 
-  (setq dashboard-items '((recents  . 6)
-                          (bookmarks . 6)
+  (setq dashboard-items '((recents  . 5)
+                          (bookmarks . 5)
                           ;(projects . 5)
                           (agenda . t)))
 
-  (defun dashboard-insert-custom (x) (insert "hmmmmmmm"))
+  (defun dashboard-insert-custom (x) (insert "
+              ,,))))))));,
+           __)))))))))))))),
+          -\\(((((''''((((((((.
+  -==//////((''  .     `)))))),
+         ))| o    ;-.    '(((((                                  ,(,
+         ( `|    /  )    ;))))'                               ,_))^;(~
+            |   |   |   ,))((((_     _____------~~~-.        %,;(;(>';'~
+            o_);   ;    )))(((` ~---~  `::           \\      %%~~)(v;(`('~
+                  ;    ''''````         `:       `:::|\\,__,%%    );`'; ~
+                 |   _                )     /      `:|`----'     `-'
+           ______/\\/~    |                 /        /
+         /~;;.____/;;'  /          ___--,-(   `;;;/
+        / //  _;______;'------~~~~~    /;;/\\    /
+       //  | |                        / ;   \\;;,\\
+      (<_  | ;                      /',/-----'  _>
+       \\_| ||_                     //~;~~~~~~~~~
+           `\\_|                   (,~~            
+                                   \\~\\
+                                    ~~"))
   (add-to-list 'dashboard-item-generators  '(custom . dashboard-insert-custom))
-  (add-to-list 'dashboard-items '(custom) t))
+  (add-to-list 'dashboard-items '(custom) t)
+  (dashboard-setup-startup-hook))
 
-; ---------------------------
-; [ Org-Mode ]
-; ---------------------------
+;; ---------------------------
+;; [ Org-Mode ]
+;; ---------------------------
 
 (setq org-latex-to-pdf-process '("texi2dvi --pdf --clean --verbose --batch %f"))
 
@@ -118,7 +161,7 @@
 (setq org-startup-with-inline-images t)
 (setq org-cycle-separator-lines -2)
 
-; org babel
+;; org babel
 (setq org-babel-python-command "python3")
 
 (org-babel-do-load-languages
@@ -126,15 +169,15 @@
  '((python . t) (js . t) (dot . t))
  )
 
-; truncate lines
+;; truncate lines
 (add-hook 'org-mode-hook (lambda () (toggle-truncate-lines)))
 
-; org pretty bullets
+;; org pretty bullets
 (use-package org-bullets
   :init
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
-; org-present
+;; org-present
 (use-package org-present)
 
 (eval-after-load "org-present"
@@ -154,9 +197,9 @@
                  (org-present-read-write)))))
 
 
-; ---------------------------
-; [ Evil ]
-; ---------------------------
+;; ---------------------------
+;; [ Evil ]
+;; ---------------------------
 
 (use-package evil
   :config
@@ -167,21 +210,26 @@
   :config
   (evil-commentary-mode))
 
-; ---------------------------
-; [ Evil Key-Bindings ]
-; ---------------------------
+(use-package evil-surround
+  :ensure t
+  :config
+  (global-evil-surround-mode 1))
+
+;; ---------------------------
+;; [ Evil Key-Bindings ]
+;; ---------------------------
 
 (global-set-key (kbd "M-j") (lambda() (interactive) (evil-scroll-line-down 3)))
 (global-set-key (kbd "M-k") (lambda() (interactive) (evil-scroll-line-up 3)))
 
-;(setq text-scale-mode-step 1)
+;;(setq text-scale-mode-step 1)
 (global-set-key (kbd "s-+") 'text-scale-increase)
 (global-set-key (kbd "s--") 'text-scale-decrease)
 
-; Ace-jump-mode
+;; Ace-jump-mode
 (define-key evil-normal-state-map (kbd "SPC") 'ace-jump-mode)
 
-; NeoTree
+;; NeoTree
 (define-key evil-normal-state-map "\C-n" 'neotree-toggle)
 (define-key evil-normal-state-map "gt" 'next-buffer)
 (define-key evil-normal-state-map "gT" 'previous-buffer)
@@ -192,18 +240,18 @@
 (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
 
 
-; ---------------------------
-; [ NeoTree ]
-; ---------------------------
+;; ---------------------------
+;; [ NeoTree ]
+;; ---------------------------
 (use-package neotree
   :config
   (setq neo-smart-open t)
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 
 
-; ---------------------------
-; [ Company ]
-; ---------------------------
+;; ---------------------------
+;; [ Company ]
+;; ---------------------------
 
 (use-package company
   :config
@@ -212,4 +260,3 @@
   (define-key company-active-map [tab] 'company-complete)
   (define-key company-active-map (kbd "C-n") 'company-select-next)
   (define-key company-active-map (kbd "C-p") 'company-select-previous))
-
