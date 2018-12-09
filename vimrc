@@ -8,6 +8,7 @@ Plug 'flazz/vim-colorschemes'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'Raimondi/delimitMate'
+Plug 'mhinz/vim-startify'
 
 call plug#end()
 
