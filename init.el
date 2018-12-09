@@ -67,6 +67,10 @@
 
   )(general-config)
 
+(use-package projectile
+  :config
+  (projectile-mode +1))
+
 (use-package magit
   :bind ("C-x m" . magit))
 
@@ -90,12 +94,22 @@
   (setq helm-buffers-fuzzy-matching t
         helm-recentf-fuzzy-match t
         helm-M-x-fuzzy-match t)
+  (helm-mode 1)
   (helm-autoresize-mode 1)
   :bind
   ("M-x" . helm-M-x)
   ("C-x C-f" . helm-find-files)
-  ;; ("C-x k" . helm-buffers-list)
+  ("C-x k" . helm-buffers-list)
   ("C-x b" . helm-mini))
+
+(use-package helm-projectile
+  :after (projectile helm)
+  :config
+  (setq projectile-completion-system 'helm)
+  (helm-projectile-on)
+  (setq projectile-switch-project-action 'helm-projectile)
+  :bind
+  ("C-x p" . helm-projectile))
 
 (use-package which-key
   :config
@@ -130,7 +144,7 @@
   (add-to-list 'dashboard-items '(custom) t)
   (setq dashboard-items '((recents  . 5)
                           (bookmarks . 5)
-                          ;(projects . 5)
+                          (projects . 5)
                           (agenda . t)))
 
   (defun dashboard-insert-custom (x) (insert (concat "Started in " (emacs-init-time) "\n" "
@@ -218,6 +232,8 @@
   :config
   (evil-mode 1)
   (setq evil-scroll-count 3)
+  (setq evil-vsplit-window-right t)
+  (setq evil-split-window-below t)
   ;; bindings
   (global-set-key (kbd "M-j") (lambda() (interactive) (evil-scroll-line-down 3)))
   (global-set-key (kbd "M-k") (lambda() (interactive) (evil-scroll-line-up 3))))
