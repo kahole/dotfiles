@@ -261,6 +261,8 @@
   (evil-set-initial-state 'inferior-python-mode 'emacs)
   ;; bindings
   (global-set-key (kbd "M-j") (lambda() (interactive) (evil-scroll-line-down 3)))
+  ;; bind-key* kraftigere, for å fikse M-j scrolling i C++ mode
+  (bind-key* "M-j" (lambda() (interactive) (evil-scroll-line-down 3)))
   (global-set-key (kbd "M-k") (lambda() (interactive) (evil-scroll-line-up 3)))
   (define-key evil-emacs-state-map (kbd "C-w") 'evil-window-map)
   (define-key evil-motion-state-map (kbd "TAB") nil)
