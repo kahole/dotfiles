@@ -64,6 +64,12 @@
   (global-set-key (kbd "s-+") 'text-scale-increase)
   (global-set-key (kbd "s--") 'text-scale-decrease)
 
+  (defun zsh (buffer-name)
+    "Start a terminal and rename buffer."
+    (interactive "sbuffer name: ")
+    (term "/bin/zsh")
+    (rename-buffer buffer-name t))
+      
   ;; allow command+v pasting in term mode
   (eval-after-load "term"
     '(define-key term-raw-map (kbd "s-v") 'term-paste))
