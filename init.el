@@ -24,12 +24,12 @@
   (add-to-list 'default-frame-alist '(height . 66))
   (add-to-list 'default-frame-alist '(width . 160))
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-  (add-to-list 'default-frame-alist '(ns-appearance . light)) ; options (light|dark) dark theme use light, vice versa
-  (set-frame-font "Menlo 14" nil t)
+  (add-to-list 'default-frame-alist '(ns-appearance . dark)) ; options (light|dark)
+  (add-to-list 'default-frame-alist '(font . "Menlo 14"))
+  ;; (add-to-list 'default-frame-alist '(font . "Menlo 28"))
 
   (setq ring-bell-function 'ignore)
   (line-number-mode -1)
-  (menu-bar-mode -1)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
 
@@ -57,7 +57,7 @@
 
   (setq load-prefer-newer t) ; prefer loading newer versions of packages and elisp files
 
-  (setq latex-run-command "texi2dvi")
+  (setq latex-run-command "texi2dvi --pdf --clean --verbose --batch")
   (setq doc-view-resolution 800)
   (add-hook 'doc-view-mode-hook 'auto-revert-mode) ; Auto reload on file changed
 
@@ -69,15 +69,28 @@
     (interactive "sbuffer name: ")
     (term "/bin/zsh")
     (rename-buffer buffer-name t))
-      
+
   ;; allow command+v pasting in term mode
   (eval-after-load "term"
     '(define-key term-raw-map (kbd "s-v") 'term-paste))
 
   )(general-config)
 
+;;
+;; Interesting packages
+;; https://www.reddit.com/r/emacs/comments/6s5470/useful_packages/
+;; https://emacsdojo.github.io/#sec-1-24
+;; docker
+;; google-this or engine-mode
+;; evil-collection   -   https://github.com/emacs-evil/evil-collection
+;;
+;; Flycheck med eslint
+;;
+;; Innebygget:
+;; imenu
+
 (use-package yasnippet
-  :commands (yas-minor-mode)
+  :commands yas-minor-mode
   :config
   (use-package yasnippet-snippets
     :config (yas-reload-all)))
@@ -97,6 +110,8 @@
                      (push '(company-tide :with company-yasnippet) company-backends)))
   )
 
+;; Tide ligger seg oppå js-mode.. kan også ligge seg oppå js2-mode
+
 ;; (use-package js2-mode
 ;;   :hook js-mode
 ;;   :config
@@ -112,24 +127,30 @@
     :config (prettier-js-mode))
   (use-package json-mode)
   (setq js-indent-level 2)
-  (yas-minor-mode t))
+  (yas-minor-mode))
 
 (add-hook 'js-mode-hook 'my-js-mode-hook)
 
 (use-package rjsx-mode
   :defer t)
 
-(use-package restclient :commands restclient-mode) ; awesome postman like mode
-(use-package focus :commands focus-mode)
+(use-package haskell-mode
+  :mode ("\\.hi\\'" "\\.hs\\'"))
 
 (use-package markdown-mode
-  :mode ("\\.md$" . markdown-mode))
+  :mode "\\.md$")
+
+(use-package helm-spotify-plus :load-path "my_packages/helm-spotify-plus" :commands helm-spotify-plus)
+;; (use-package helm-spotify-plus :commands helm-spotify-plus)
+
+(use-package restclient :commands restclient-mode) ; awesome postman like mode
+(use-package focus :commands focus-mode)
 
 (use-package magit
   :bind ("C-x m" . magit))
 
 (use-package projectile
-  :config (projectile-mode +1))
+  :config (projectile-mode))
 
 (use-package helm
   :demand t
@@ -143,8 +164,8 @@
   (setq helm-buffers-fuzzy-matching t
         helm-recentf-fuzzy-match t
         helm-M-x-fuzzy-match t)
-  (helm-mode 1)
-  (helm-autoresize-mode 1)
+  (helm-mode)
+  (helm-autoresize-mode)
 
   (use-package helm-projectile
     :after (projectile)
@@ -176,18 +197,50 @@
 ;; (use-package spaceline
 ;;   :config
 ;;   (require 'spaceline-config)
-;;   (setq powerline-default-separator 'contour)
-;;   ;; (setq powerline-default-separator 'utf-8)
-;;   ;; (setq powerline-height 1.2)
+;;   ;; (setq powerline-default-separator 'contour)
+;;   ;; (setq powerline-default-separator 'wave)
+;;   (setq powerline-default-separator 'utf-8)
+;;   ;; (setq powerline-height 0.7)
 ;;   ;; (setq powerline-text-scale-factor 10.5)
 ;;   (setq powerline-image-apple-rgb t)
-;;   (spaceline-spacemacs-theme)
+;;   (spaceline-emacs-theme)
 ;;   (spaceline-helm-mode))
 
-;; (use-package doom-themes :defer t :init (load-theme 'doom-one t))
-(use-package spacemacs-theme :defer t :init (load-theme 'spacemacs-light t))
+;; (setq ns-use-srgb-colorspace nil)
+;; (use-package telephone-line
+;;   :config
+;;   (setq telephone-line-lhs
+;;         '((evil   . (telephone-line-evil-tag-segment))
+;;           (accent . (telephone-line-vc-segment
+;;                      telephone-line-erc-modified-channels-segment
+;;                      telephone-line-process-segment))
+;;           (nil    . (telephone-line-minor-mode-segment
+;;                      telephone-line-buffer-segment))))
+;;   (setq telephone-line-rhs
+;;         '((nil    . (telephone-line-misc-info-segment))
+;;           (accent . (telephone-line-major-mode-segment))
+;;           (evil   . (telephone-line-airline-position-segment))))
+;;   (setq telephone-line-primary-left-separator 'telephone-line-identity-left
+;;         telephone-line-secondary-left-separator 'telephone-line-identity-hollow-left
+;;         telephone-line-primary-right-separator 'telephone-line-identity-right
+;;         telephone-line-secondary-right-separator 'telephone-line-identity-hollow-right)
+;;   (setq telephone-line-height 24
+;;         telephone-line-evil-use-short-tag t)
+;;   (telephone-line-mode))
+
+(use-package doom-themes :defer t)
+(use-package spacemacs-theme :defer t)
 (use-package solarized-theme :defer t)
 (use-package all-the-icons :defer t)
+
+(setq my-theme 'spacemacs-dark)
+
+(if (daemonp)
+    (add-hook 'after-make-frame-functions
+              (lambda (frame)
+                (with-selected-frame frame
+                  (load-theme my-theme t))))
+  (load-theme my-theme t))
 
 ;; ---------------------------
 ;; [ Evil ]
@@ -195,7 +248,7 @@
 
 (use-package evil
   :config
-  (evil-mode 1)
+  (evil-mode)
   (setq evil-scroll-count 3)
   (setq evil-vsplit-window-right t)
   (setq evil-split-window-below t)
@@ -218,7 +271,7 @@
 
   (use-package evil-surround
     :config
-    (global-evil-surround-mode 1))
+    (global-evil-surround-mode))
 
   (use-package ace-jump-mode
     :config
@@ -251,6 +304,11 @@
   (use-package org-bullets
     :hook (org-mode . org-bullets-mode))
 
+
+  (use-package epresent :commands (epresent-run))
+  
+  ;; org-tree-slide, different style of presentation than org-present, both are good
+  (use-package org-tree-slide :defer t)
   ;; org-present
   (use-package org-present
     :defer t
@@ -279,6 +337,7 @@
                   ))))
   )
 
+
 ;; ---------------------------
 ;; [ Dashboard ]
 ;; ---------------------------
@@ -286,7 +345,7 @@
 (use-package page-break-lines)
 
 (use-package dashboard
-  :after (page-break-lines)
+  :after page-break-lines
   :config
   (setq dashboard-startup-banner 'logo)
   (setq dashboard-banner-logo-title "[ W E L C O M E   T O   E M A C S ]")
