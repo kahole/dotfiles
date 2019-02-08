@@ -3,4 +3,4 @@
 - `init.el` - Emacs
 - `zshrc` - zsh
 - `vimrc` - Vim
-- `tmux.conf` - Vim
+- `tmux.conf` - tmux
