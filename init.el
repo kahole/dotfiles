@@ -67,7 +67,7 @@
   (defun zsh (buffer-name)
     "Start a terminal and rename buffer."
     (interactive "sbuffer name: ")
-    (term "/bin/zsh")
+    (ansi-term "/bin/zsh")
     (rename-buffer buffer-name t))
 
   ;; allow command+v pasting in term mode
