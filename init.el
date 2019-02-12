@@ -50,7 +50,7 @@
   (electric-pair-mode t) ; smart auto-closing of parens,..
 
   (setq scroll-step 1) ; keyboard scroll one line at a time
-  (setq scroll-margin 5) ; scroll margin, always keeps extra n lines on screen while scrolling
+  ;; (setq scroll-margin 5) ; scroll margin, always keeps extra n lines on screen while scrolling
   (setq mac-option-key-is-meta t)
   (setq mac-option-modifier 'meta)
   (setq mac-right-option-modifier nil)
