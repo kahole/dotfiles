@@ -74,6 +74,9 @@
   (eval-after-load "term"
     '(define-key term-raw-map (kbd "s-v") 'term-paste))
 
+  ;; Make emacs put all the custom-settings noise in this file, and then never load it
+  (setq-default custom-file (expand-file-name ".custom.el" user-emacs-directory))
+
   )(general-config)
 
 ;; (use-package yasnippet
