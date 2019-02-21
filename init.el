@@ -26,6 +26,7 @@
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   (add-to-list 'default-frame-alist '(ns-appearance . dark)) ; options (light|dark)
   (add-to-list 'default-frame-alist '(font . "Menlo 14"))
+  ;; (add-to-list 'default-frame-alist '(font . "Menlo 28"))
 
   (setq ring-bell-function 'ignore)
   (line-number-mode -1)
@@ -126,6 +127,7 @@
 (use-package markdown-mode
   :mode "\\.md$")
 
+;; (use-package helm-spotify-plus :load-path "my_packages/helm-spotify-plus" :commands helm-spotify-plus)
 (use-package helm-spotify-plus :commands helm-spotify-plus)
 
 (use-package restclient :commands restclient-mode) ; awesome postman like mode
@@ -145,6 +147,7 @@
   ("C-x y" . helm-show-kill-ring)
   ("C-x k" . helm-buffers-list)
   ("C-x b" . helm-mini)
+  ("C-x i" . helm-imenu)
   :config
   (setq helm-buffers-fuzzy-matching t
         helm-recentf-fuzzy-match t
@@ -181,17 +184,21 @@
 ;; [ Themes ]
 ;; ---------------------------
 
-(use-package spaceline
-  :config
-  (require 'spaceline-config)
-  (setq powerline-default-separator 'wave)
-  ;; (setq powerline-default-separator 'utf-8)
-  (setq powerline-height 16)
-  ;; (setq powerline-text-scale-factor 1.0)
-  (setq powerline-image-apple-rgb t)
-  ;; (spaceline-emacs-theme)
-  (spaceline-spacemacs-theme)
-  (spaceline-helm-mode))
+;; (use-package spaceline
+;;   :config
+;;   (require 'spaceline-config)
+;;   (setq powerline-default-separator 'wave)
+;;   ;; (setq powerline-default-separator 'contour)
+;;   ;; (setq powerline-default-separator 'wave)
+;;   ;; (setq powerline-default-separator 'utf-8)
+;;   (setq powerline-height 16)
+;;   ;; (setq powerline-height 28)
+;;   ;; (setq powerline-text-scale-factor 10.5)
+;;   ;; (setq powerline-text-scale-factor 1.0)
+;;   (setq powerline-image-apple-rgb t)
+;;   ;; (spaceline-emacs-theme)
+;;   (spaceline-spacemacs-theme)
+;;   (spaceline-helm-mode))
 
 (use-package dracula-theme :defer t)
 (use-package darktooth-theme :defer t)
@@ -200,7 +207,8 @@
 (use-package solarized-theme :defer t)
 (use-package all-the-icons :defer t)
 
-(setq my-theme 'spacemacs-dark)
+;; (setq my-theme 'spacemacs-dark)
+(setq my-theme 'dracula)
 
 ;; If emacs started as a deamon, wait until frame exists to apply theme, otherwise apply now
 (if (daemonp)
@@ -209,6 +217,9 @@
                 (with-selected-frame frame
                   (load-theme my-theme t))))
   (load-theme my-theme t))
+
+;; Custom theming
+(set-face-attribute 'helm-source-header nil :height 250)
 
 ;; ---------------------------
 ;; [ Evil ]
@@ -317,7 +328,8 @@
 (use-package dashboard
   :after page-break-lines
   :config
-  (setq dashboard-startup-banner 'logo)
+  ;; (setq dashboard-startup-banner 'logo)
+  (setq dashboard-startup-banner 'official)
   (setq dashboard-banner-logo-title "[ W E L C O M E   T O   E M A C S ]")
 
   (add-to-list 'dashboard-items '(custom) t)
