@@ -126,8 +126,7 @@
 (use-package markdown-mode
   :mode "\\.md$")
 
-(use-package helm-spotify-plus :load-path "my_packages/helm-spotify-plus" :commands helm-spotify-plus)
-;; (use-package helm-spotify-plus :commands helm-spotify-plus)
+(use-package helm-spotify-plus :commands helm-spotify-plus)
 
 (use-package restclient :commands restclient-mode) ; awesome postman like mode
 (use-package focus :commands focus-mode)
