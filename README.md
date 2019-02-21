@@ -1,6 +1,6 @@
 # dotfiles
 
-- `init.el` - Emacs
-- `zshrc` - zsh
-- `vimrc` - Vim
-- `tmux.conf` - tmux
+- `.emacs.d/init.el` - Emacs
+- `.zshrc` - zsh
+- `.vimrc` - Vim
+- `.tmux.conf` - tmux
