@@ -26,7 +26,6 @@
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   (add-to-list 'default-frame-alist '(ns-appearance . dark)) ; options (light|dark)
   (add-to-list 'default-frame-alist '(font . "Menlo 14"))
-  ;; (add-to-list 'default-frame-alist '(font . "Menlo 28"))
 
   (setq ring-bell-function 'ignore)
   (line-number-mode -1)
@@ -187,22 +186,6 @@
 ;; [ Themes ]
 ;; ---------------------------
 
-;; (use-package spaceline
-;;   :config
-;;   (require 'spaceline-config)
-;;   (setq powerline-default-separator 'wave)
-;;   ;; (setq powerline-default-separator 'contour)
-;;   ;; (setq powerline-default-separator 'wave)
-;;   ;; (setq powerline-default-separator 'utf-8)
-;;   (setq powerline-height 16)
-;;   ;; (setq powerline-height 28)
-;;   ;; (setq powerline-text-scale-factor 10.5)
-;;   ;; (setq powerline-text-scale-factor 1.0)
-;;   (setq powerline-image-apple-rgb t)
-;;   ;; (spaceline-emacs-theme)
-;;   (spaceline-spacemacs-theme)
-;;   (spaceline-helm-mode))
-
 (use-package dracula-theme :defer t)
 (use-package darktooth-theme :defer t)
 (use-package doom-themes :defer t)
@@ -223,6 +206,27 @@
 
 ;; Custom theming
 (set-face-attribute 'helm-source-header nil :height 250)
+
+(use-package spaceline
+  :config
+  (require 'spaceline-config)
+  (setq powerline-default-separator 'arrow)
+  ;; (setq powerline-default-separator 'wave)
+  ;; (setq powerline-default-separator 'utf-8)
+  ;; (setq powerline-height 16)
+  (setq powerline-height 24)
+  ;; (setq powerline-text-scale-factor 1.0)
+  (setq powerline-image-apple-rgb t)
+  ;; (spaceline-emacs-theme)
+  (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
+  (setq evil-normal-state-tag "N")
+  (setq evil-insert-state-tag "I")
+  (setq evil-motion-state-tag "M")
+  (setq evil-emacs-state-tag "E")
+  (setq evil-visual-state-tag "V")
+
+  (spaceline-spacemacs-theme)
+  (spaceline-helm-mode))
 
 ;; ---------------------------
 ;; [ Evil ]
