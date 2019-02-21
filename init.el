@@ -1,5 +1,5 @@
-;; (require 'package) ; older versions of emacs require loading of 'package and initialize
-;; (package-initialize)
+(require 'package)
+(package-initialize)
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa-stable" . "https://stable.melpa.org/packages/")
@@ -11,7 +11,7 @@
         ("org" . 5)
         ("melpa-stable" . 0)))
 
-;; for portability to emacs versions without use-package already installed
+;; for portability to emacs instances without use-package already installed
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
@@ -20,13 +20,12 @@
 (setq use-package-always-ensure t) ; auto install packages
 
 (defun ui-config ()
-
-  (add-to-list 'default-frame-alist '(height . 66))
-  (add-to-list 'default-frame-alist '(width . 160))
+  (add-to-list 'default-frame-alist '(fullscreen . maximized))
+  ;; (add-to-list 'default-frame-alist '(height . 66)
+  ;; (add-to-list 'default-frame-alist '(width . 170))
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   (add-to-list 'default-frame-alist '(ns-appearance . dark)) ; options (light|dark)
   (add-to-list 'default-frame-alist '(font . "Menlo 14"))
-  ;; (add-to-list 'default-frame-alist '(font . "Menlo 28"))
 
   (setq ring-bell-function 'ignore)
   (line-number-mode -1)
@@ -47,9 +46,9 @@
 
   (setq-default indent-tabs-mode nil) ; spaces instead of tabs
 
-  (electric-pair-mode t) ; smart auto-closing of parens,..
+  (electric-pair-mode t) ; smart auto-closing of parens
 
-  (setq scroll-step 1) ; keyboard scroll one line at a time
+  (setq scroll-step 1) ; navigate off-screen scroll one line at a time
   ;; (setq scroll-margin 5) ; scroll margin, always keeps extra n lines on screen while scrolling
   (setq mac-option-key-is-meta t)
   (setq mac-option-modifier 'meta)
@@ -76,60 +75,47 @@
 
   )(general-config)
 
-;;
-;; Interesting packages
-;; https://www.reddit.com/r/emacs/comments/6s5470/useful_packages/
-;; https://emacsdojo.github.io/#sec-1-24
-;; docker
-;; google-this or engine-mode
-;; evil-collection   -   https://github.com/emacs-evil/evil-collection
-;;
-;; Flycheck med eslint
-;;
-;; Innebygget:
-;; imenu
-
-(use-package yasnippet
-  :commands yas-minor-mode
-  :config
-  (use-package yasnippet-snippets
-    :config (yas-reload-all)))
-
-(use-package tide
-  :config
-  (setq tide-completion-ignore-case t)
-  ;; (setq tide-completion-detailed t)
-  (setq tide-filter-out-warning-completions t)
-  (setq tide-default-mode "JS")
-  :hook (js-mode . (lambda ()
-                     (tide-setup)
-                     ;; (flycheck-mode +1)
-                     ;; (setq flycheck-check-syntax-automatically '(save mode-enabled))
-                     (eldoc-mode +1)
-                     (tide-hl-identifier-mode +1)
-                     (push '(company-tide :with company-yasnippet) company-backends)))
-  )
-
-;; Tide ligger seg oppå js-mode.. kan også ligge seg oppå js2-mode
-
-;; (use-package js2-mode
-;;   :hook js-mode
+;; (use-package yasnippet
+;;   :commands yas-minor-mode
 ;;   :config
-;;   (setq js2-mode-show-parse-errors nil)
-;;   (setq js2-mode-show-strict-warnings nil)
+;;   (use-package yasnippet-snippets
+;;     :config (yas-reload-all)))
+
+;; (use-package tide
+;;   :config
+;;   (setq tide-completion-ignore-case t)
+;;   ;; (setq tide-completion-detailed t)
+;;   (setq tide-filter-out-warning-completions t)
+;;   (setq tide-default-mode "JS")
+;;   :hook (js-mode . (lambda ()
+;;                      (tide-setup)
+;;                      ;; (flycheck-mode +1)
+;;                      ;; (setq flycheck-check-syntax-automatically '(save mode-enabled))
+;;                      (eldoc-mode +1)
+;;                      (tide-hl-identifier-mode +1)
+;;                      (push '(company-tide :with company-yasnippet) company-backends)))
 ;;   )
 
-(defun my-js-mode-hook ()
-  ;; (use-package npm-mode)
-  ;; (npm-mode)
-  ;; (use-package javascript-eslint)
-  (use-package prettier-js
-    :config (prettier-js-mode))
-  (use-package json-mode)
-  (setq js-indent-level 2)
-  (yas-minor-mode))
+;; ;; Tide ligger seg oppå js-mode.. kan også ligge seg oppå js2-mode
 
-(add-hook 'js-mode-hook 'my-js-mode-hook)
+;; ;; (use-package js2-mode
+;; ;;   :hook js-mode
+;; ;;   :config
+;; ;;   (setq js2-mode-show-parse-errors nil)
+;; ;;   (setq js2-mode-show-strict-warnings nil)
+;; ;;   )
+
+;; (defun my-js-mode-hook ()
+;;   ;; (use-package npm-mode)
+;;   ;; (npm-mode)
+;;   ;; (use-package javascript-eslint)
+;;   (use-package prettier-js
+;;     :config (prettier-js-mode))
+;;   (use-package json-mode)
+;;   (setq js-indent-level 2)
+;;   (yas-minor-mode))
+
+;; (add-hook 'js-mode-hook 'my-js-mode-hook)
 
 (use-package rjsx-mode
   :defer t)
@@ -164,6 +150,8 @@
   (setq helm-buffers-fuzzy-matching t
         helm-recentf-fuzzy-match t
         helm-M-x-fuzzy-match t)
+  ;; For tramp / ssh, makes helm skip checking if files still exists on remote (very painful on slow ssh connections)
+  (setq helm-buffer-skip-remote-checking t)
   (helm-mode)
   (helm-autoresize-mode)
 
@@ -194,40 +182,20 @@
 ;; [ Themes ]
 ;; ---------------------------
 
-;; (use-package spaceline
-;;   :config
-;;   (require 'spaceline-config)
-;;   ;; (setq powerline-default-separator 'contour)
-;;   ;; (setq powerline-default-separator 'wave)
-;;   (setq powerline-default-separator 'utf-8)
-;;   ;; (setq powerline-height 0.7)
-;;   ;; (setq powerline-text-scale-factor 10.5)
-;;   (setq powerline-image-apple-rgb t)
-;;   (spaceline-emacs-theme)
-;;   (spaceline-helm-mode))
+(use-package spaceline
+  :config
+  (require 'spaceline-config)
+  (setq powerline-default-separator 'wave)
+  ;; (setq powerline-default-separator 'utf-8)
+  (setq powerline-height 16)
+  ;; (setq powerline-text-scale-factor 1.0)
+  (setq powerline-image-apple-rgb t)
+  ;; (spaceline-emacs-theme)
+  (spaceline-spacemacs-theme)
+  (spaceline-helm-mode))
 
-;; (setq ns-use-srgb-colorspace nil)
-;; (use-package telephone-line
-;;   :config
-;;   (setq telephone-line-lhs
-;;         '((evil   . (telephone-line-evil-tag-segment))
-;;           (accent . (telephone-line-vc-segment
-;;                      telephone-line-erc-modified-channels-segment
-;;                      telephone-line-process-segment))
-;;           (nil    . (telephone-line-minor-mode-segment
-;;                      telephone-line-buffer-segment))))
-;;   (setq telephone-line-rhs
-;;         '((nil    . (telephone-line-misc-info-segment))
-;;           (accent . (telephone-line-major-mode-segment))
-;;           (evil   . (telephone-line-airline-position-segment))))
-;;   (setq telephone-line-primary-left-separator 'telephone-line-identity-left
-;;         telephone-line-secondary-left-separator 'telephone-line-identity-hollow-left
-;;         telephone-line-primary-right-separator 'telephone-line-identity-right
-;;         telephone-line-secondary-right-separator 'telephone-line-identity-hollow-right)
-;;   (setq telephone-line-height 24
-;;         telephone-line-evil-use-short-tag t)
-;;   (telephone-line-mode))
-
+(use-package dracula-theme :defer t)
+(use-package darktooth-theme :defer t)
 (use-package doom-themes :defer t)
 (use-package spacemacs-theme :defer t)
 (use-package solarized-theme :defer t)
@@ -235,6 +203,7 @@
 
 (setq my-theme 'spacemacs-dark)
 
+;; If emacs started as a deamon, wait until frame exists to apply theme, otherwise apply now
 (if (daemonp)
     (add-hook 'after-make-frame-functions
               (lambda (frame)
@@ -249,11 +218,11 @@
 (use-package evil
   :config
   (evil-mode)
-  (setq evil-scroll-count 3)
+  ;; (setq evil-scroll-count 3)
   (setq evil-vsplit-window-right t)
   (setq evil-split-window-below t)
   ;; initial evil state for these modes
-  (evil-set-initial-state 'fundamental-mode 'motion)
+  (evil-set-initial-state 'fundamental-mode 'normal)
   (evil-set-initial-state 'special-mode 'motion)
   (evil-set-initial-state 'dashboard-mode 'motion)
   (evil-set-initial-state 'term-mode 'emacs)
@@ -307,10 +276,10 @@
     :hook (org-mode . org-bullets-mode))
 
 
-  (use-package epresent :commands (epresent-run))
+  ;; (use-package epresent :commands (epresent-run))
   
   ;; org-tree-slide, different style of presentation than org-present, both are good
-  (use-package org-tree-slide :defer t)
+  ;; (use-package org-tree-slide :defer t)
   ;; org-present
   (use-package org-present
     :defer t
