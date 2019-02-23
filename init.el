@@ -28,7 +28,6 @@
   (add-to-list 'default-frame-alist '(font . "Menlo 14"))
 
   (setq ring-bell-function 'ignore)
-  (line-number-mode -1)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
 
@@ -62,12 +61,26 @@
 
   (global-set-key (kbd "s-+") 'text-scale-increase)
   (global-set-key (kbd "s--") 'text-scale-decrease)
+  (global-set-key (kbd "C-x t") 'zsh-panel)
 
-  (defun zsh (buffer-name)
-    "Start a terminal and rename buffer."
-    (interactive "sbuffer name: ")
-    (ansi-term "/bin/zsh")
-    (rename-buffer buffer-name t))
+  (defun zsh-panel ()
+    "Toggle a terminal in a small pane at the bottom of the screen."
+    (interactive)
+    (let ((new-name "term panel") (existing-name "*term panel*"))
+      (let ((panel-window (get-buffer-window existing-name)))
+        (if panel-window
+            (delete-window panel-window)
+          (evil-window-split)
+          (evil-window-decrease-height 16)
+
+          (if (get-buffer existing-name)
+              (switch-to-buffer existing-name)
+            (ansi-term "/bin/zsh" new-name))))))
+
+  (defun zsh ()
+    "Start a terminal in a new buffer without having to provide a name."
+    (interactive)
+    (ansi-term "/bin/zsh" "term"))
 
   ;; allow command+v pasting in term mode
   (eval-after-load "term"
@@ -346,18 +359,25 @@
                           (agenda . t)))
 
   (defun dashboard-insert-custom (x) (insert (concat "Started in " (emacs-init-time) "\n" "
-           *-*,
-       ,*\\/|`| \\
-       \\'  | |'| *,
-        \\ `| | |/ )
-         | |'| , /
-         |'| |, /
-       __|_|_|_|__
-      [___________]
-       |         |
-       |         |
-       |         |
-       |_________|
+                                   __ 1      1 __        _.xxxxxx.
+                   [xxxxxxxxxxxxxx|##|xxxxxxxx|##|xxxxxxXXXXXXXXX|
+   ____            [XXXXXXXXXXXXXXXXXXXXX/.\||||||XXXXXXXXXXXXXXX|
+  |::: `-------.-.__[=========---___/::::|::::::|::::||X O^XXXXXX|
+  |::::::::::::|2|%%%%%%%%%%%%\::::::::::|::::::|::::||X /
+  |::::,-------|_|~~~~~~~~~~~~~`---=====-------------':||  5
+   ~~~~                       |===|:::::|::::::::|::====:\O
+                              |===|:::::|:.----.:|:||::||:|
+                              |=3=|::4::`'::::::`':||__||:|
+                              |===|:::::::/  ))\:::`----':/
+  BlasTech Industries'        `===|::::::|  // //~`######b
+  DL-44 Heavy Blaster Pistol      `--------=====/  ######B
+                                                   `######b
+  1 .......... Sight Adjustments                    #######b
+  2 ............... Stun Setting                    #######B
+  3 ........... Air Cooling Vent                    `#######b
+  4 ................. Power Pack                     #######P
+  5 ... Power Pack Release Lever             LS      `#####B
+
 ")))
   (add-to-list 'dashboard-item-generators  '(custom . dashboard-insert-custom))
   (add-to-list 'dashboard-items '(custom) t)
