@@ -1,3 +1,10 @@
+;; set garbage-collection treshold higher than default for the purpose of loading init.el
+(setq gc-cons-threshold 402653184
+      gc-cons-percentage 0.6)
+(defvar doom--file-name-handler-alist file-name-handler-alist)
+(setq file-name-handler-alist nil)
+
+
 (require 'package)
 (package-initialize)
 (setq package-archives
@@ -21,11 +28,10 @@
 
 (defun ui-config ()
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
-  ;; (add-to-list 'default-frame-alist '(height . 66)
-  ;; (add-to-list 'default-frame-alist '(width . 170))
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   (add-to-list 'default-frame-alist '(ns-appearance . dark)) ; options (light|dark)
-  (add-to-list 'default-frame-alist '(font . "Menlo 14"))
+  ;; (add-to-list 'default-frame-alist '(font . "Menlo 14"))
+  (add-to-list 'default-frame-alist '(font . "Hack 14"))
 
   (setq ring-bell-function 'ignore)
   (tool-bar-mode -1)
@@ -48,7 +54,6 @@
   (electric-pair-mode t) ; smart auto-closing of parens
 
   (setq scroll-step 1) ; navigate off-screen scroll one line at a time
-  ;; (setq scroll-margin 5) ; scroll margin, always keeps extra n lines on screen while scrolling
   (setq mac-option-key-is-meta t)
   (setq mac-option-modifier 'meta)
   (setq mac-right-option-modifier nil)
@@ -136,6 +141,9 @@
 (use-package rjsx-mode
   :defer t)
 
+(use-package racket-mode
+  :mode ("\\.rkt\\'"))
+
 (use-package haskell-mode
   :mode ("\\.hi\\'" "\\.hs\\'"))
 
@@ -152,6 +160,7 @@
   :bind ("C-x m" . magit))
 
 (use-package projectile
+  :defer t
   :config (projectile-mode))
 
 (use-package helm
@@ -170,6 +179,7 @@
   ;; For tramp / ssh, makes helm skip checking if files still exists on remote (very painful on slow ssh connections)
   (setq helm-buffer-skip-remote-checking t)
   (helm-mode)
+  (add-to-list 'helm-boring-buffer-regexp-list "magit*")
   (helm-autoresize-mode)
 
   (use-package helm-projectile
@@ -220,26 +230,26 @@
 ;; Custom theming
 (set-face-attribute 'helm-source-header nil :height 250)
 
-(use-package spaceline
-  :config
-  (require 'spaceline-config)
-  (setq powerline-default-separator 'arrow)
-  ;; (setq powerline-default-separator 'wave)
-  ;; (setq powerline-default-separator 'utf-8)
-  ;; (setq powerline-height 16)
-  (setq powerline-height 24)
-  ;; (setq powerline-text-scale-factor 1.0)
-  (setq powerline-image-apple-rgb t)
-  ;; (spaceline-emacs-theme)
-  (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
-  (setq evil-normal-state-tag "N")
-  (setq evil-insert-state-tag "I")
-  (setq evil-motion-state-tag "M")
-  (setq evil-emacs-state-tag "E")
-  (setq evil-visual-state-tag "V")
+;; (use-package spaceline
+;;   :config
+;;   (require 'spaceline-config)
+;;   (setq powerline-default-separator 'arrow)
+;;   ;; (setq powerline-default-separator 'wave)
+;;   ;; (setq powerline-default-separator 'utf-8)
+;;   ;; (setq powerline-height 16)
+;;   (setq powerline-height 24)
+;;   ;; (setq powerline-text-scale-factor 1.0)
+;;   (setq powerline-image-apple-rgb t)
+;;   ;; (spaceline-emacs-theme)
+;;   (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
+;;   (setq evil-normal-state-tag "N")
+;;   (setq evil-insert-state-tag "I")
+;;   (setq evil-motion-state-tag "M")
+;;   (setq evil-emacs-state-tag "E")
+;;   (setq evil-visual-state-tag "V")
 
-  (spaceline-spacemacs-theme)
-  (spaceline-helm-mode))
+;;   (spaceline-spacemacs-theme)
+;;   (spaceline-helm-mode))
 
 ;; ---------------------------
 ;; [ Evil ]
@@ -346,11 +356,15 @@
 (use-package page-break-lines)
 
 (use-package dashboard
+;; (use-package dashboard :load-path "my_packages/dashboard"
   :after page-break-lines
   :config
   ;; (setq dashboard-startup-banner 'logo)
-  (setq dashboard-startup-banner 'official)
+  ;; (setq dashboard-startup-banner 'official)
+  (setq dashboard-startup-banner 1)
   (setq dashboard-banner-logo-title "[ W E L C O M E   T O   E M A C S ]")
+
+  ;; (set-face-attribute 'dashboard-text-banner-face nil :foreground "#FF0BAF" :weight 'bold :slant 'italic)
 
   (add-to-list 'dashboard-items '(custom) t)
   (setq dashboard-items '((recents  . 5)
@@ -382,3 +396,10 @@
   (add-to-list 'dashboard-item-generators  '(custom . dashboard-insert-custom))
   (add-to-list 'dashboard-items '(custom) t)
   (dashboard-setup-startup-hook))
+
+;; resets garbage collection tresholds to default levels
+(add-hook 'emacs-startup-hook
+          (lambda () (setq gc-cons-threshold 800000
+                gc-cons-percentage 0.1)))
+(add-hook 'emacs-startup-hook
+          (lambda () (setq file-name-handler-alist doom--file-name-handler-alist)))
