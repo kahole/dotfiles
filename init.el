@@ -47,6 +47,7 @@
 
   )(ui-config)
 
+
 (defun general-config ()
 
   (setq-default indent-tabs-mode nil) ; spaces instead of tabs
@@ -364,7 +365,7 @@
   (setq dashboard-startup-banner 1)
   (setq dashboard-banner-logo-title "[ W E L C O M E   T O   E M A C S ]")
 
-  ;; (set-face-attribute 'dashboard-text-banner-face nil :foreground "#FF0BAF" :weight 'bold :slant 'italic)
+  (set-face-attribute 'dashboard-text-banner-face nil :foreground "#FF0BAF" :weight 'bold :slant 'italic)
 
   (add-to-list 'dashboard-items '(custom) t)
   (setq dashboard-items '((recents  . 5)
