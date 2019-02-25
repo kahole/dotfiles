@@ -231,6 +231,13 @@
 ;; Custom theming
 (set-face-attribute 'helm-source-header nil :height 250)
 
+(use-package moody
+  :config
+  (setq x-underline-at-descent-line t)
+  (setq moody-slant-function 'moody-slant-apple-rgb)
+  (moody-replace-mode-line-buffer-identification)
+  (moody-replace-vc-mode))
+
 ;; (use-package spaceline
 ;;   :config
 ;;   (require 'spaceline-config)
@@ -365,6 +372,7 @@
   (setq dashboard-startup-banner 1)
   (setq dashboard-banner-logo-title "[ W E L C O M E   T O   E M A C S ]")
 
+  (setq dashboard-center-content t)
   (set-face-attribute 'dashboard-text-banner-face nil :foreground "#FF0BAF" :weight 'bold :slant 'italic)
 
   (add-to-list 'dashboard-items '(custom) t)
