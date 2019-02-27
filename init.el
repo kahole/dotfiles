@@ -1,9 +1,10 @@
-;; set garbage-collection treshold higher than default for the purpose of loading init.el
+;; -- optimizations
+;; set garbage-collection treshold to a very large number for the purpose of loading init.el
 (setq gc-cons-threshold 402653184
       gc-cons-percentage 0.6)
-(defvar doom--file-name-handler-alist file-name-handler-alist)
+(defvar tmp--file-name-handler-alist file-name-handler-alist)
 (setq file-name-handler-alist nil)
-
+;; --
 
 (require 'package)
 (package-initialize)
@@ -12,26 +13,25 @@
         ("melpa-stable" . "https://stable.melpa.org/packages/")
         ("org" . "https://orgmode.org/elpa/")
         ("melpa" . "http://melpa.milkbox.net/packages/"))
-      package-archive-priorities
-      '(("melpa" . 15)
-        ("gnu" . 10)
-        ("org" . 5)
-        ("melpa-stable" . 0)))
+      package-archive-priorities '(("melpa" . 15) ("gnu" . 10) ("org" . 5) ("melpa-stable" . 0)))
 
 ;; for portability to emacs instances without use-package already installed
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
 
-(require 'use-package)
+(eval-when-compile
+  (require 'use-package))
+
 (setq use-package-always-ensure t) ; auto install packages
 
 (defun ui-config ()
+  (add-to-list 'default-frame-alist '(font . "Menlo 14"))
+
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
+  ;; mac windowing options
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   (add-to-list 'default-frame-alist '(ns-appearance . dark)) ; options (light|dark)
-  ;; (add-to-list 'default-frame-alist '(font . "Menlo 14"))
-  (add-to-list 'default-frame-alist '(font . "Hack 14"))
 
   (setq ring-bell-function 'ignore)
   (tool-bar-mode -1)
@@ -44,9 +44,7 @@
   ;; (pixel-scroll-mode t)
   ;; (setq pixel-resolution-fine-flag t)
   ;; (setq pixel-dead-time 0)
-
   )(ui-config)
-
 
 (defun general-config ()
 
@@ -59,6 +57,9 @@
   (setq mac-option-modifier 'meta)
   (setq mac-right-option-modifier nil)
 
+  ;; load path from shell (on mac)
+  (use-package exec-path-from-shell :config (exec-path-from-shell-initialize))
+
   (setq load-prefer-newer t) ; prefer loading newer versions of packages and elisp files
 
   (setq latex-run-command "texi2dvi --pdf --clean --verbose --batch")
@@ -67,8 +68,11 @@
 
   (global-set-key (kbd "s-+") 'text-scale-increase)
   (global-set-key (kbd "s--") 'text-scale-decrease)
-  (global-set-key (kbd "C-x t") 'zsh-panel)
 
+  ;; make emacs put all the custom-settings noise in this file, and then never load it
+  (setq-default custom-file (expand-file-name ".custom.el" user-emacs-directory))
+
+  ;; terminal stuff
   (defun zsh-panel ()
     "Toggle a terminal in a small pane at the bottom of the screen."
     (interactive)
@@ -88,14 +92,16 @@
     (interactive)
     (ansi-term "/bin/zsh" "term"))
 
+  (global-set-key (kbd "C-x t") 'zsh-panel)
+
   ;; allow command+v pasting in term mode
   (eval-after-load "term"
     '(define-key term-raw-map (kbd "s-v") 'term-paste))
-
-  ;; Make emacs put all the custom-settings noise in this file, and then never load it
-  (setq-default custom-file (expand-file-name ".custom.el" user-emacs-directory))
-
   )(general-config)
+
+;; ---------------------------
+;; [ JS ]
+;; ---------------------------
 
 ;; (use-package yasnippet
 ;;   :commands yas-minor-mode
@@ -118,7 +124,7 @@
 ;;                      (push '(company-tide :with company-yasnippet) company-backends)))
 ;;   )
 
-;; ;; Tide ligger seg oppå js-mode.. kan også ligge seg oppå js2-mode
+;; ;; tide ligger seg oppå js-mode.. kan også ligge seg oppå js2-mode
 
 ;; ;; (use-package js2-mode
 ;; ;;   :hook js-mode
@@ -139,8 +145,12 @@
 
 ;; (add-hook 'js-mode-hook 'my-js-mode-hook)
 
-(use-package rjsx-mode
-  :defer t)
+;; (use-package rjsx-mode
+;;   :defer t)
+
+;; ---------------------------
+;; [ Misc. packages ]
+;; ---------------------------
 
 (use-package racket-mode
   :mode ("\\.rkt\\'"))
@@ -150,12 +160,6 @@
 
 (use-package markdown-mode
   :mode "\\.md$")
-
-;; (use-package helm-spotify-plus :load-path "my_packages/helm-spotify-plus" :commands helm-spotify-plus)
-(use-package helm-spotify-plus :commands helm-spotify-plus)
-
-(use-package restclient :commands restclient-mode) ; awesome postman like mode
-(use-package focus :commands focus-mode)
 
 (use-package magit
   :bind ("C-x m" . magit))
@@ -204,60 +208,9 @@
 (use-package which-key
   :config (which-key-mode))
 
-(use-package exec-path-from-shell :config (exec-path-from-shell-initialize))
-
-;; ---------------------------
-;; [ Themes ]
-;; ---------------------------
-
-(use-package dracula-theme :defer t)
-(use-package darktooth-theme :defer t)
-(use-package doom-themes :defer t)
-(use-package spacemacs-theme :defer t)
-(use-package solarized-theme :defer t)
-(use-package all-the-icons :defer t)
-
-;; (setq my-theme 'spacemacs-dark)
-(setq my-theme 'dracula)
-
-;; If emacs started as a deamon, wait until frame exists to apply theme, otherwise apply now
-(if (daemonp)
-    (add-hook 'after-make-frame-functions
-              (lambda (frame)
-                (with-selected-frame frame
-                  (load-theme my-theme t))))
-  (load-theme my-theme t))
-
-;; Custom theming
-(set-face-attribute 'helm-source-header nil :height 250)
-
-(use-package moody
-  :config
-  (setq x-underline-at-descent-line t)
-  (setq moody-slant-function 'moody-slant-apple-rgb)
-  (moody-replace-mode-line-buffer-identification)
-  (moody-replace-vc-mode))
-
-;; (use-package spaceline
-;;   :config
-;;   (require 'spaceline-config)
-;;   (setq powerline-default-separator 'arrow)
-;;   ;; (setq powerline-default-separator 'wave)
-;;   ;; (setq powerline-default-separator 'utf-8)
-;;   ;; (setq powerline-height 16)
-;;   (setq powerline-height 24)
-;;   ;; (setq powerline-text-scale-factor 1.0)
-;;   (setq powerline-image-apple-rgb t)
-;;   ;; (spaceline-emacs-theme)
-;;   (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
-;;   (setq evil-normal-state-tag "N")
-;;   (setq evil-insert-state-tag "I")
-;;   (setq evil-motion-state-tag "M")
-;;   (setq evil-emacs-state-tag "E")
-;;   (setq evil-visual-state-tag "V")
-
-;;   (spaceline-spacemacs-theme)
-;;   (spaceline-helm-mode))
+(use-package helm-spotify-plus :commands helm-spotify-plus)
+(use-package restclient :commands restclient-mode) ; awesome postman like mode
+;; (use-package focus :commands focus-mode)
 
 ;; ---------------------------
 ;; [ Evil ]
@@ -356,7 +309,6 @@
                   ))))
   )
 
-
 ;; ---------------------------
 ;; [ Dashboard ]
 ;; ---------------------------
@@ -367,10 +319,10 @@
 ;; (use-package dashboard :load-path "my_packages/dashboard"
   :after page-break-lines
   :config
-  ;; (setq dashboard-startup-banner 'logo)
-  ;; (setq dashboard-startup-banner 'official)
-  (setq dashboard-startup-banner 1)
-  (setq dashboard-banner-logo-title "[ W E L C O M E   T O   E M A C S ]")
+  (setq dashboard-startup-banner 'official)
+  ;; (setq dashboard-startup-banner 1)
+  ;; (setq dashboard-banner-logo-title "[ W E L C O M E   T O   E M A C S ]")
+  (setq dashboard-banner-logo-title nil)
 
   (setq dashboard-center-content t)
   (set-face-attribute 'dashboard-text-banner-face nil :foreground "#FF0BAF" :weight 'bold :slant 'italic)
@@ -381,34 +333,74 @@
                           (projects . 5)
                           (agenda . t)))
 
-  (defun dashboard-insert-custom (x) (insert (concat "Started in " (emacs-init-time) "\n" "
-                                   __ 1      1 __        _.xxxxxx.
-                   [xxxxxxxxxxxxxx|##|xxxxxxxx|##|xxxxxxXXXXXXXXX|
-   ____            [XXXXXXXXXXXXXXXXXXXXX/.\||||||XXXXXXXXXXXXXXX|
-  |::: `-------.-.__[=========---___/::::|::::::|::::||X O^XXXXXX|
-  |::::::::::::|2|%%%%%%%%%%%%\::::::::::|::::::|::::||X /
-  |::::,-------|_|~~~~~~~~~~~~~`---=====-------------':||  5
-   ~~~~                       |===|:::::|::::::::|::====:\O
-                              |===|:::::|:.----.:|:||::||:|
-                              |=3=|::4::`'::::::`':||__||:|
-                              |===|:::::::/  ))\:::`----':/
-  BlasTech Industries'        `===|::::::|  // //~`######b
-  DL-44 Heavy Blaster Pistol      `--------=====/  ######B
-                                                   `######b
-  1 .......... Sight Adjustments                    #######b
-  2 ............... Stun Setting                    #######B
-  3 ........... Air Cooling Vent                    `#######b
-  4 ................. Power Pack                     #######P
-  5 ... Power Pack Release Lever             LS      `#####B
-
-")))
+  (defun dashboard-insert-custom (x) (insert (concat "Started in " (emacs-init-time) "")))
   (add-to-list 'dashboard-item-generators  '(custom . dashboard-insert-custom))
   (add-to-list 'dashboard-items '(custom) t)
   (dashboard-setup-startup-hook))
 
+;; ---------------------------
+;; [ Themes ]
+;; ---------------------------
+
+(use-package dracula-theme :defer t)
+(use-package doom-themes :defer t)
+(use-package spacemacs-theme :defer t)
+(use-package solarized-theme :defer t)
+(use-package all-the-icons :defer t)
+
+(setq my-theme 'spacemacs-light)
+;; (setq my-theme 'dracula)
+
+;; If emacs started as a deamon, wait until frame exists to apply theme, otherwise apply now
+(if (daemonp)
+    (add-hook 'after-make-frame-functions
+              (lambda (frame)
+                (with-selected-frame frame
+                  (load-theme my-theme t))))
+  (load-theme my-theme t))
+
+;; Custom theming
+(set-face-attribute 'helm-source-header nil :height 250)
+
+;; minimalistic, but nice mode line
+(use-package moody
+  :config
+  (setq x-underline-at-descent-line t)
+  (setq moody-slant-function 'moody-slant-apple-rgb)
+  (moody-replace-mode-line-buffer-identification)
+  (moody-replace-vc-mode)
+  (let ((line (face-attribute 'mode-line :underline)))
+    (set-face-attribute 'mode-line          nil :overline   line)
+    (set-face-attribute 'mode-line-inactive nil :overline   line)
+    (set-face-attribute 'mode-line-inactive nil :underline  line)
+    (set-face-attribute 'mode-line          nil :box        nil)
+    (set-face-attribute 'mode-line-inactive nil :box        nil)
+    (set-face-attribute 'mode-line-inactive nil :background "#f9f2d9")))
+
+;; (use-package spaceline
+;;   :config
+;;   (require 'spaceline-config)
+;;   (setq powerline-default-separator 'arrow)
+;;   ;; (setq powerline-default-separator 'wave)
+;;   ;; (setq powerline-default-separator 'utf-8)
+;;   ;; (setq powerline-height 16)
+;;   (setq powerline-height 24)
+;;   ;; (setq powerline-text-scale-factor 1.0)
+;;   (setq powerline-image-apple-rgb t)
+;;   ;; (spaceline-emacs-theme)
+;;   (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
+;;   (setq evil-normal-state-tag "N")
+;;   (setq evil-insert-state-tag "I")
+;;   (setq evil-motion-state-tag "M")
+;;   (setq evil-emacs-state-tag "E")
+;;   (setq evil-visual-state-tag "V")
+;;   (spaceline-spacemacs-theme)
+;;   (spaceline-helm-mode))
+
+;; -- optimizations
 ;; resets garbage collection tresholds to default levels
 (add-hook 'emacs-startup-hook
           (lambda () (setq gc-cons-threshold 800000
                 gc-cons-percentage 0.1)))
 (add-hook 'emacs-startup-hook
-          (lambda () (setq file-name-handler-alist doom--file-name-handler-alist)))
+          (lambda () (setq file-name-handler-alist tmp--file-name-handler-alist)))
