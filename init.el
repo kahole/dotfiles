@@ -50,6 +50,8 @@
 
   (setq-default indent-tabs-mode nil) ; spaces instead of tabs
 
+  (setq mode-require-final-newline nil)
+
   (electric-pair-mode t) ; smart auto-closing of parens
 
   (setq scroll-step 1) ; navigate off-screen scroll one line at a time
@@ -247,7 +249,8 @@
 
   (use-package ace-jump-mode
     :config
-    (define-key evil-normal-state-map (kbd "SPC") 'ace-jump-mode))
+    (define-key evil-normal-state-map (kbd "SPC") 'ace-jump-mode)
+    (define-key evil-motion-state-map (kbd "SPC") 'ace-jump-mode))
   )
 
 ;; ---------------------------
