@@ -4,10 +4,15 @@
       gc-cons-percentage 0.6)
 (defvar tmp--file-name-handler-alist file-name-handler-alist)
 (setq file-name-handler-alist nil)
-;; --
+
+;; ---------------------------
+;; [ Package system ]
+;; ---------------------------
 
 (require 'package)
-(package-initialize)
+(if (version<= emacs-version "27.0")
+    (package-initialize))
+
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa-stable" . "https://stable.melpa.org/packages/")
@@ -22,8 +27,13 @@
 
 (eval-when-compile
   (require 'use-package))
+(require 'bind-key)
 
 (setq use-package-always-ensure t) ; auto install packages
+
+;; ---------------------------
+;; [ UI preferences ]
+;; ---------------------------
 
 (defun ui-config ()
   (add-to-list 'default-frame-alist '(font . "Menlo 14"))
@@ -31,7 +41,7 @@
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
   ;; mac windowing options
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-  (add-to-list 'default-frame-alist '(ns-appearance . dark)) ; options (light|dark)
+  (add-to-list 'default-frame-alist '(ns-appearance . light)) ; options (light|dark) NB! system wide dark mode flips this around
 
   (setq ring-bell-function 'ignore)
   (tool-bar-mode -1)
@@ -46,7 +56,13 @@
   ;; (setq pixel-dead-time 0)
   )(ui-config)
 
+;; ---------------------------
+;; [ General preferences ]
+;; ---------------------------
+
 (defun general-config ()
+
+  (setq inhibit-startup-message t) 
 
   (setq-default indent-tabs-mode nil) ; spaces instead of tabs
 
@@ -54,13 +70,16 @@
 
   (electric-pair-mode t) ; smart auto-closing of parens
 
+  (global-auto-revert-mode) ; reload buffer when file changed on disk
+
   (setq scroll-step 1) ; navigate off-screen scroll one line at a time
   (setq mac-option-key-is-meta t)
   (setq mac-option-modifier 'meta)
   (setq mac-right-option-modifier nil)
 
   ;; load path from shell (on mac)
-  (use-package exec-path-from-shell :config (exec-path-from-shell-initialize))
+  (if (eq system-type 'darwin)
+      (use-package exec-path-from-shell :config (exec-path-from-shell-initialize)))
 
   (setq load-prefer-newer t) ; prefer loading newer versions of packages and elisp files
 
@@ -105,50 +124,50 @@
 ;; [ JS ]
 ;; ---------------------------
 
-;; (use-package yasnippet
-;;   :commands yas-minor-mode
-;;   :config
-;;   (use-package yasnippet-snippets
-;;     :config (yas-reload-all)))
+(use-package yasnippet
+  :commands yas-minor-mode
+  :config
+  (use-package yasnippet-snippets
+    :config (yas-reload-all)))
 
-;; (use-package tide
+;; tide can be used on top of js-mode or js2-mode
+
+(use-package tide
+  :config
+  (setq tide-completion-ignore-case t)
+  ;; (setq tide-completion-detailed t)
+  (setq tide-filter-out-warning-completions t)
+  (setq tide-default-mode "JS")
+  :hook (js-mode . (lambda ()
+                     (tide-setup)
+                     ;; (flycheck-mode +1)
+                     ;; (setq flycheck-check-syntax-automatically '(save mode-enabled))
+                     (eldoc-mode +1)
+                     (tide-hl-identifier-mode +1)
+                     (push '(company-tide :with company-yasnippet) company-backends)))
+  )
+
+;; (use-package js2-mode
+;;   :hook js-mode
 ;;   :config
-;;   (setq tide-completion-ignore-case t)
-;;   ;; (setq tide-completion-detailed t)
-;;   (setq tide-filter-out-warning-completions t)
-;;   (setq tide-default-mode "JS")
-;;   :hook (js-mode . (lambda ()
-;;                      (tide-setup)
-;;                      ;; (flycheck-mode +1)
-;;                      ;; (setq flycheck-check-syntax-automatically '(save mode-enabled))
-;;                      (eldoc-mode +1)
-;;                      (tide-hl-identifier-mode +1)
-;;                      (push '(company-tide :with company-yasnippet) company-backends)))
+;;   (setq js2-mode-show-parse-errors nil)
+;;   (setq js2-mode-show-strict-warnings nil)
 ;;   )
 
-;; ;; tide ligger seg oppå js-mode.. kan også ligge seg oppå js2-mode
+(defun my-js-mode-hook ()
+  ;; (use-package npm-mode)
+  ;; (npm-mode)
+  ;; (use-package javascript-eslint)
+  (use-package prettier-js
+    :config (prettier-js-mode))
+  (use-package json-mode)
+  (setq js-indent-level 2)
+  (yas-minor-mode))
 
-;; ;; (use-package js2-mode
-;; ;;   :hook js-mode
-;; ;;   :config
-;; ;;   (setq js2-mode-show-parse-errors nil)
-;; ;;   (setq js2-mode-show-strict-warnings nil)
-;; ;;   )
+(add-hook 'js-mode-hook 'my-js-mode-hook)
 
-;; (defun my-js-mode-hook ()
-;;   ;; (use-package npm-mode)
-;;   ;; (npm-mode)
-;;   ;; (use-package javascript-eslint)
-;;   (use-package prettier-js
-;;     :config (prettier-js-mode))
-;;   (use-package json-mode)
-;;   (setq js-indent-level 2)
-;;   (yas-minor-mode))
-
-;; (add-hook 'js-mode-hook 'my-js-mode-hook)
-
-;; (use-package rjsx-mode
-;;   :defer t)
+(use-package rjsx-mode
+  :defer t)
 
 ;; ---------------------------
 ;; [ Misc. packages ]
@@ -163,6 +182,9 @@
 (use-package markdown-mode
   :mode "\\.md$")
 
+(use-package yaml-mode
+  :mode "\\.yml\\'")
+
 (use-package magit
   :bind ("C-x m" . magit))
 
@@ -171,7 +193,6 @@
   :config (projectile-mode))
 
 (use-package helm
-  :demand t
   :bind
   ("M-x" . helm-M-x)
   ("C-x C-f" . helm-find-files)
@@ -179,6 +200,7 @@
   ("C-x k" . helm-buffers-list)
   ("C-x b" . helm-mini)
   ("C-x i" . helm-imenu)
+  ("C-x p" . helm-projectile)
   :config
   (setq helm-buffers-fuzzy-matching t
         helm-recentf-fuzzy-match t
@@ -189,17 +211,19 @@
   (add-to-list 'helm-boring-buffer-regexp-list "magit*")
   (helm-autoresize-mode)
 
+  (set-face-attribute 'helm-source-header nil :height 250) ;; big headers in helm
+
   (use-package helm-projectile
     :after (projectile)
-    :bind
-    ("C-x p" . helm-projectile))
+    ;; :bind
+    ;; ("C-x p" . helm-projectile)
     :config
     (setq projectile-completion-system 'helm)
     (helm-projectile-on)
-    (setq projectile-switch-project-action 'helm-projectile)
-)
+    (setq projectile-switch-project-action 'helm-projectile)))
 
 (use-package company
+  ;; :defer t
   :config
   (global-company-mode)
   (setq company-selection-wrap-around t)
@@ -212,18 +236,18 @@
 
 (use-package helm-spotify-plus :commands helm-spotify-plus)
 (use-package restclient :commands restclient-mode) ; awesome postman like mode
-;; (use-package focus :commands focus-mode)
 
 ;; ---------------------------
 ;; [ Evil ]
 ;; ---------------------------
 
 (use-package evil
-  :config
-  (evil-mode)
-  ;; (setq evil-scroll-count 3)
+  :init
+  (setq evil-want-keybinding nil)
   (setq evil-vsplit-window-right t)
   (setq evil-split-window-below t)
+  :config
+  (evil-mode)
   ;; initial evil state for these modes
   (evil-set-initial-state 'fundamental-mode 'normal)
   (evil-set-initial-state 'special-mode 'motion)
@@ -251,6 +275,12 @@
     :config
     (define-key evil-normal-state-map (kbd "SPC") 'ace-jump-mode)
     (define-key evil-motion-state-map (kbd "SPC") 'ace-jump-mode))
+
+  ;; (use-package evil-collection
+  ;;   ;; :after evil
+  ;;   :config
+  ;;   (setq evil-collection-mode-list '(magit))
+  ;;   (evil-collection-init))
   )
 
 ;; ---------------------------
@@ -279,9 +309,6 @@
   (use-package org-bullets
     :hook (org-mode . org-bullets-mode))
 
-
-  ;; (use-package epresent :commands (epresent-run))
-  
   ;; org-tree-slide, different style of presentation than org-present, both are good
   ;; (use-package org-tree-slide :defer t)
   ;; org-present
@@ -298,8 +325,7 @@
                   (org-present-read-only)
                   (set-face-attribute 'org-level-1 nil :height 2.0)
                   (set-frame-parameter nil 'internal-border-width 20)
-                  (setq mode-line-format nil)
-                  ))
+                  (setq mode-line-format nil)))
       (add-hook 'org-present-mode-quit-hook
                 (lambda ()
                   (turn-on-evil-mode)
@@ -308,38 +334,61 @@
                   (org-present-read-write)
                   (set-face-attribute 'org-level-1 nil :height 1.3)
                   (set-frame-parameter nil 'internal-border-width 2)
-                  (setq mode-line-format (eval (car (get 'mode-line-format 'standard-value))))
-                  ))))
+                  (setq mode-line-format (eval (car (get 'mode-line-format 'standard-value))))))))
   )
 
 ;; ---------------------------
 ;; [ Dashboard ]
 ;; ---------------------------
 
-(use-package page-break-lines)
+;; (use-package page-break-lines)
 
-(use-package dashboard
-;; (use-package dashboard :load-path "my_packages/dashboard"
-  :after page-break-lines
-  :config
-  (setq dashboard-startup-banner 'official)
-  ;; (setq dashboard-startup-banner 1)
-  ;; (setq dashboard-banner-logo-title "[ W E L C O M E   T O   E M A C S ]")
-  (setq dashboard-banner-logo-title nil)
+;; (use-package dashboard
+;; ;; (use-package dashboard :load-path "my_packages/dashboard"
+;;   :defer t
+;;   :after page-break-lines
+;;   :config
+;;   (setq dashboard-startup-banner 'official)
+;;   ;; (setq dashboard-startup-banner 1)
+;;   ;; (setq dashboard-banner-logo-title "[ W E L C O M E   T O   E M A C S ]")
+;;   (setq dashboard-banner-logo-title nil)
 
-  (setq dashboard-center-content t)
-  (set-face-attribute 'dashboard-text-banner-face nil :foreground "#FF0BAF" :weight 'bold :slant 'italic)
+;;   (setq dashboard-center-content t)
+;;   (set-face-attribute 'dashboard-text-banner nil :foreground "#FF0BAF" :weight 'bold :slant 'italic)
 
-  (add-to-list 'dashboard-items '(custom) t)
-  (setq dashboard-items '((recents  . 5)
-                          (bookmarks . 5)
-                          (projects . 5)
-                          (agenda . t)))
+;;   (add-to-list 'dashboard-items '(custom) t)
+;;   (setq dashboard-items '((recents  . 5)
+;;                           (bookmarks . 5)
+;;                           (projects . 5)
+;;                           (agenda . t)))
 
-  (defun dashboard-insert-custom (x) (insert (concat "Started in " (emacs-init-time) "")))
-  (add-to-list 'dashboard-item-generators  '(custom . dashboard-insert-custom))
-  (add-to-list 'dashboard-items '(custom) t)
-  (dashboard-setup-startup-hook))
+;;   (defun dashboard-insert-custom (x) (insert (concat "Started in " (emacs-init-time) "")))
+;;   (add-to-list 'dashboard-item-generators  '(custom . dashboard-insert-custom))
+;;   (add-to-list 'dashboard-items '(custom) t)
+;;   (dashboard-setup-startup-hook))
+
+;; ---------------------------
+;; [ Quicker dashboard ]
+;; ---------------------------
+
+(setq initial-scratch-message "
+;; ######## ##     ##    ###     ######   ######
+;; ##       ###   ###   ## ##   ##    ## ##    ##
+;; ##       #### ####  ##   ##  ##       ##
+;; ######   ## ### ## ##     ## ##        ######
+;; ##       ##     ## ######### ##             ##
+;; ##       ##     ## ##     ## ##    ## ##    ##
+;; ######## ##     ## ##     ##  ######   ######
+
+;; ")
+
+(setq initial-scratch-message (concat initial-scratch-message "Started in " (emacs-init-time) "\n\n"))
+
+(add-hook 'emacs-startup-hook
+          (lambda ()
+              (insert-button ";;  - init.el" 'follow-link t 'action (lambda (x) (find-file user-init-file)))
+              (insert-button "\n;;  - todo.org" 'follow-link t 'action (lambda (x) (find-file user-init-file)))))
+
 
 ;; ---------------------------
 ;; [ Themes ]
@@ -351,8 +400,9 @@
 (use-package solarized-theme :defer t)
 (use-package all-the-icons :defer t)
 
-(setq my-theme 'spacemacs-light)
-;; (setq my-theme 'dracula)
+;; (setq my-theme nil)
+;; (setq my-theme 'spacemacs-light)
+(setq my-theme 'dracula)
 
 ;; If emacs started as a deamon, wait until frame exists to apply theme, otherwise apply now
 (if (daemonp)
@@ -360,45 +410,22 @@
               (lambda (frame)
                 (with-selected-frame frame
                   (load-theme my-theme t))))
-  (load-theme my-theme t))
-
-;; Custom theming
-(set-face-attribute 'helm-source-header nil :height 250)
+  (when my-theme (load-theme my-theme t)))
 
 ;; minimalistic, but nice mode line
-(use-package moody
-  :config
-  (setq x-underline-at-descent-line t)
-  (setq moody-slant-function 'moody-slant-apple-rgb)
-  (moody-replace-mode-line-buffer-identification)
-  (moody-replace-vc-mode)
-  (let ((line (face-attribute 'mode-line :underline)))
-    (set-face-attribute 'mode-line          nil :overline   line)
-    (set-face-attribute 'mode-line-inactive nil :overline   line)
-    (set-face-attribute 'mode-line-inactive nil :underline  line)
-    (set-face-attribute 'mode-line          nil :box        nil)
-    (set-face-attribute 'mode-line-inactive nil :box        nil)
-    (set-face-attribute 'mode-line-inactive nil :background "#f9f2d9")))
-
-;; (use-package spaceline
+;; (use-package moody
 ;;   :config
-;;   (require 'spaceline-config)
-;;   (setq powerline-default-separator 'arrow)
-;;   ;; (setq powerline-default-separator 'wave)
-;;   ;; (setq powerline-default-separator 'utf-8)
-;;   ;; (setq powerline-height 16)
-;;   (setq powerline-height 24)
-;;   ;; (setq powerline-text-scale-factor 1.0)
-;;   (setq powerline-image-apple-rgb t)
-;;   ;; (spaceline-emacs-theme)
-;;   (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
-;;   (setq evil-normal-state-tag "N")
-;;   (setq evil-insert-state-tag "I")
-;;   (setq evil-motion-state-tag "M")
-;;   (setq evil-emacs-state-tag "E")
-;;   (setq evil-visual-state-tag "V")
-;;   (spaceline-spacemacs-theme)
-;;   (spaceline-helm-mode))
+;;   (setq x-underline-at-descent-line t)
+;;   (setq moody-slant-function 'moody-slant-apple-rgb)
+;;   (moody-replace-mode-line-buffer-identification)
+;;   (moody-replace-vc-mode)
+;;   (let ((line (face-attribute 'mode-line :underline)))
+;;     (set-face-attribute 'mode-line          nil :overline   line)
+;;     (set-face-attribute 'mode-line-inactive nil :overline   line)
+;;     (set-face-attribute 'mode-line-inactive nil :underline  line)
+;;     (set-face-attribute 'mode-line          nil :box        nil)
+;;     (set-face-attribute 'mode-line-inactive nil :box        nil)
+;;     (set-face-attribute 'mode-line-inactive nil :background "#f9f2d9")))
 
 ;; -- optimizations
 ;; resets garbage collection tresholds to default levels
