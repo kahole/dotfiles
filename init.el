@@ -9,8 +9,8 @@
 ;; [ Package system ]
 ;; ---------------------------
 
-(require 'package)
-(if (version<= emacs-version "27.0")
+;; (require 'package)
+(when (version<= emacs-version "27.0")
     (package-initialize))
 
 (setq package-archives
@@ -37,7 +37,6 @@
 
 (defun ui-config ()
   (add-to-list 'default-frame-alist '(font . "Menlo 14"))
-
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
   ;; mac windowing options
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
@@ -48,7 +47,8 @@
   (scroll-bar-mode -1)
 
   (show-paren-mode 1) ; show matching parenthesis
-  ;; (global-display-line-numbers-mode 1) ; native line numbers mode:
+
+  (add-hook 'prog-mode-hook #'display-line-numbers-mode) ; native line numbers in modes that contain "code"
 
   (setq mouse-wheel-follow-mouse 't) ; scroll window under mouse
   ;; (pixel-scroll-mode t)
@@ -78,8 +78,11 @@
   (setq mac-right-option-modifier nil)
 
   ;; load path from shell (on mac)
-  (if (eq system-type 'darwin)
-      (use-package exec-path-from-shell :config (exec-path-from-shell-initialize)))
+  ;; (if (eq system-type 'darwin)
+  ;;     (use-package exec-path-from-shell :config (exec-path-from-shell-initialize)))
+  ;; manually setting the path.. a lot faster than ^
+  (setenv "PATH" (concat (getenv "PATH") ":/Users/kristianhole/bin:/usr/local/bin:/usr/local/bin:/Library/TeX/texbin:/usr/local/go/bin"))
+  (setq exec-path (append exec-path '("/Users/kristianhole/bin" "/usr/local/bin" "/usr/local/bin" "/Library/TeX/texbin" "/usr/local/go/bin")))
 
   (setq load-prefer-newer t) ; prefer loading newer versions of packages and elisp files
 
@@ -124,28 +127,11 @@
 ;; [ JS ]
 ;; ---------------------------
 
-(use-package yasnippet
-  :commands yas-minor-mode
-  :config
-  (use-package yasnippet-snippets
-    :config (yas-reload-all)))
-
-;; tide can be used on top of js-mode or js2-mode
-
-(use-package tide
-  :config
-  (setq tide-completion-ignore-case t)
-  ;; (setq tide-completion-detailed t)
-  (setq tide-filter-out-warning-completions t)
-  (setq tide-default-mode "JS")
-  :hook (js-mode . (lambda ()
-                     (tide-setup)
-                     ;; (flycheck-mode +1)
-                     ;; (setq flycheck-check-syntax-automatically '(save mode-enabled))
-                     (eldoc-mode +1)
-                     (tide-hl-identifier-mode +1)
-                     (push '(company-tide :with company-yasnippet) company-backends)))
-  )
+;; (use-package yasnippet
+;;   :commands yas-minor-mode
+;;   :config
+;;   (use-package yasnippet-snippets
+;;     :config (yas-reload-all)))
 
 ;; (use-package js2-mode
 ;;   :hook js-mode
@@ -158,20 +144,38 @@
   ;; (use-package npm-mode)
   ;; (npm-mode)
   ;; (use-package javascript-eslint)
-  (use-package prettier-js
-    :config (prettier-js-mode))
-  (use-package json-mode)
-  (setq js-indent-level 2)
-  (yas-minor-mode))
+  ;; (use-package prettier-js
+  ;;   :config (prettier-js-mode))
+  ;; (use-package json-mode)
+  (lsp)
+  ;; (lsp-ui-mode)
+  (setq js-indent-level 2))
+  ;; (yas-minor-mode))
 
 (add-hook 'js-mode-hook 'my-js-mode-hook)
 
-(use-package rjsx-mode
-  :defer t)
+(use-package rjsx-mode :defer t)
+
+;; ---------------------------
+;; [ Language server ]
+;; ---------------------------
+
+(use-package lsp-mode
+  :commands lsp
+  :init
+  (setq lsp-auto-guess-root t)
+  (setq lsp-prefer-flymake :none)
+  )
+;; (use-package lsp-ui :commands lsp-ui-mode)
+(use-package company-lsp :commands company-lsp)
 
 ;; ---------------------------
 ;; [ Misc. packages ]
 ;; ---------------------------
+
+(use-package diminish)
+(use-package eldoc :diminish)
+(use-package undo-tree :diminish)
 
 (use-package racket-mode
   :mode ("\\.rkt\\'"))
@@ -189,10 +193,10 @@
   :bind ("C-x m" . magit))
 
 (use-package projectile
-  :defer t
   :config (projectile-mode))
 
 (use-package helm
+  :diminish
   :bind
   ("M-x" . helm-M-x)
   ("C-x C-f" . helm-find-files)
@@ -232,6 +236,7 @@
   (define-key company-active-map (kbd "C-p") 'company-select-previous))
 
 (use-package which-key
+  :diminish
   :config (which-key-mode))
 
 (use-package helm-spotify-plus :commands helm-spotify-plus)
@@ -264,6 +269,7 @@
   (define-key evil-motion-state-map (kbd "TAB") nil)
 
   (use-package evil-commentary
+    :diminish
     :config
     (evil-commentary-mode))
 
@@ -313,7 +319,7 @@
   ;; (use-package org-tree-slide :defer t)
   ;; org-present
   (use-package org-present
-    :defer t
+    :commands org-present
     :config
     (progn
       (add-hook 'org-present-mode-hook
@@ -368,7 +374,7 @@
 ;;   (dashboard-setup-startup-hook))
 
 ;; ---------------------------
-;; [ Quicker dashboard ]
+;; [ Minimalist dashboard ]
 ;; ---------------------------
 
 (setq initial-scratch-message "
@@ -387,8 +393,9 @@
 (add-hook 'emacs-startup-hook
           (lambda ()
               (insert-button ";;  - init.el" 'follow-link t 'action (lambda (x) (find-file user-init-file)))
-              (insert-button "\n;;  - todo.org" 'follow-link t 'action (lambda (x) (find-file user-init-file)))))
-
+              (insert-button "\n;;  - todo.org" 'follow-link t 'action (lambda (x) (find-file "~/privat/todo.org")))
+              (insert-button "\n;;  - ntnu todo.org" 'follow-link t 'action (lambda (x) (find-file "~/ntnu/todo.org")))
+              (text-scale-set 3)))
 
 ;; ---------------------------
 ;; [ Themes ]
@@ -412,7 +419,7 @@
                   (load-theme my-theme t))))
   (when my-theme (load-theme my-theme t)))
 
-;; minimalistic, but nice mode line
+;; minimalist, but nice mode line
 ;; (use-package moody
 ;;   :config
 ;;   (setq x-underline-at-descent-line t)
