@@ -191,7 +191,9 @@
   :mode "\\.yml\\'")
 
 (use-package magit
-  :bind ("C-x m" . magit))
+  :bind ("C-x m" . magit)
+  :config
+  (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
 
 (use-package projectile
   :config (projectile-mode))
@@ -393,9 +395,9 @@
 
 (add-hook 'emacs-startup-hook
           (lambda ()
-              (insert-button ";;  - init.el" 'follow-link t 'action (lambda (x) (find-file user-init-file)))
+              (insert-button ";;  - ntnu todo.org" 'follow-link t 'action (lambda (x) (find-file "~/ntnu/todo.org")))
               (insert-button "\n;;  - todo.org" 'follow-link t 'action (lambda (x) (find-file "~/privat/todo.org")))
-              (insert-button "\n;;  - ntnu todo.org" 'follow-link t 'action (lambda (x) (find-file "~/ntnu/todo.org")))
+              (insert-button "\n;;  - init.el" 'follow-link t 'action (lambda (x) (find-file user-init-file)))
               (text-scale-set 3)))
 
 ;; ---------------------------
