@@ -17,14 +17,10 @@ plugins=(osx zsh-autosuggestions)
 
 source $ZSH/oh-my-zsh.sh
 
-# User configuration
-
 # keybind autosuggest: accept suggestion: CTRL SPACE
-bindkey '^ ' autosuggest-accept
+# bindkey '^ ' autosuggest-accept
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=238'
-
-# Aliases
 
 alias vimrc="vim ~/.vimrc"
 alias zshrc="vim ~/.zshrc"
