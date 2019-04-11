@@ -70,6 +70,7 @@
 
   (electric-pair-mode t) ; smart auto-closing of parens
 
+  (setq vc-follow-symlinks t) ; follow symlinks for git-controlled files into their repos
   (global-auto-revert-mode) ; reload buffer when file changed on disk
 
   (setq scroll-step 1) ; navigate off-screen scroll one line at a time
