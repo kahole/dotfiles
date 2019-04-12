@@ -40,17 +40,17 @@
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
   ;; mac windowing options
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-  (add-to-list 'default-frame-alist '(ns-appearance . light)) ; options (light|dark) NB! system wide dark mode flips this around
+  (add-to-list 'default-frame-alist '(ns-appearance . dark)) ; options (light|dark)
 
   (setq ring-bell-function 'ignore)
+  (setq mouse-wheel-follow-mouse 't) ; scroll window under mouse
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
 
-  (show-paren-mode 1) ; show matching parenthesis
+  (show-paren-mode t) ; show matching parenthesis
 
   (add-hook 'prog-mode-hook #'display-line-numbers-mode) ; native line numbers in modes that contain "code"
 
-  (setq mouse-wheel-follow-mouse 't) ; scroll window under mouse
   ;; (pixel-scroll-mode t)
   ;; (setq pixel-resolution-fine-flag t)
   ;; (setq pixel-dead-time 0)
@@ -74,10 +74,14 @@
   (global-auto-revert-mode) ; reload buffer when file changed on disk
 
   (setq scroll-step 1) ; navigate off-screen scroll one line at a time
+  
   (setq mac-option-key-is-meta t)
   (setq mac-option-modifier 'meta)
   (setq mac-right-option-modifier nil)
-
+  (global-set-key (kbd "s-'") 'other-frame)
+  (global-set-key (kbd "s-+") 'text-scale-increase)
+  (global-set-key (kbd "s--") 'text-scale-decrease)
+  
   ;; load path from shell (on mac)
   ;; (if (eq system-type 'darwin)
   ;;     (use-package exec-path-from-shell :config (exec-path-from-shell-initialize)))
@@ -90,9 +94,6 @@
   (setq latex-run-command "texi2dvi --pdf --clean --verbose --batch")
   (setq doc-view-resolution 800)
   (add-hook 'doc-view-mode-hook 'auto-revert-mode) ; Auto reload on file changed
-
-  (global-set-key (kbd "s-+") 'text-scale-increase)
-  (global-set-key (kbd "s--") 'text-scale-decrease)
 
   ;; make emacs put all the custom-settings noise in this file, and then never load it
   (setq-default custom-file (expand-file-name ".custom.el" user-emacs-directory))
@@ -196,6 +197,7 @@
   (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
 
 (use-package projectile
+  ;; :defer t
   :config (projectile-mode))
 
 (use-package helm
@@ -408,7 +410,7 @@
 (use-package doom-themes :defer t)
 (use-package spacemacs-theme :defer t)
 (use-package solarized-theme :defer t)
-(use-package all-the-icons :defer t)
+;; (use-package all-the-icons :defer t)
 
 ;; (setq my-theme nil)
 ;; (setq my-theme 'spacemacs-light)
@@ -434,8 +436,8 @@
 ;;     (set-face-attribute 'mode-line-inactive nil :overline   line)
 ;;     (set-face-attribute 'mode-line-inactive nil :underline  line)
 ;;     (set-face-attribute 'mode-line          nil :box        nil)
-;;     (set-face-attribute 'mode-line-inactive nil :box        nil)
-;;     (set-face-attribute 'mode-line-inactive nil :background "#f9f2d9")))
+;;     (set-face-attribute 'mode-line-inactive nil :box        nil)))
+;;     ;; (set-face-attribute 'mode-line-inactive nil :background "#f9f2d9")))
 
 ;; -- optimizations
 ;; resets garbage collection tresholds to default levels
