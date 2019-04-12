@@ -261,7 +261,6 @@
   ;; initial evil state for these modes
   (evil-set-initial-state 'fundamental-mode 'normal)
   (evil-set-initial-state 'special-mode 'motion)
-  (evil-set-initial-state 'dashboard-mode 'motion)
   (evil-set-initial-state 'term-mode 'emacs)
   (evil-set-initial-state 'eshell-mode 'emacs)
   (evil-set-initial-state 'inferior-python-mode 'emacs)
@@ -347,36 +346,6 @@
                   (set-frame-parameter nil 'internal-border-width 2)
                   (setq mode-line-format (eval (car (get 'mode-line-format 'standard-value))))))))
   )
-
-;; ---------------------------
-;; [ Dashboard ]
-;; ---------------------------
-
-;; (use-package page-break-lines)
-
-;; (use-package dashboard
-;; ;; (use-package dashboard :load-path "my_packages/dashboard"
-;;   :defer t
-;;   :after page-break-lines
-;;   :config
-;;   (setq dashboard-startup-banner 'official)
-;;   ;; (setq dashboard-startup-banner 1)
-;;   ;; (setq dashboard-banner-logo-title "[ W E L C O M E   T O   E M A C S ]")
-;;   (setq dashboard-banner-logo-title nil)
-
-;;   (setq dashboard-center-content t)
-;;   (set-face-attribute 'dashboard-text-banner nil :foreground "#FF0BAF" :weight 'bold :slant 'italic)
-
-;;   (add-to-list 'dashboard-items '(custom) t)
-;;   (setq dashboard-items '((recents  . 5)
-;;                           (bookmarks . 5)
-;;                           (projects . 5)
-;;                           (agenda . t)))
-
-;;   (defun dashboard-insert-custom (x) (insert (concat "Started in " (emacs-init-time) "")))
-;;   (add-to-list 'dashboard-item-generators  '(custom . dashboard-insert-custom))
-;;   (add-to-list 'dashboard-items '(custom) t)
-;;   (dashboard-setup-startup-hook))
 
 ;; ---------------------------
 ;; [ Minimalist dashboard ]
