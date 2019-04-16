@@ -9,6 +9,7 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'Raimondi/delimitMate'
 Plug 'mhinz/vim-startify'
+" Plug 'kshenoy/vim-signature'
 
 call plug#end()
 
@@ -89,7 +90,7 @@ set noshowcmd
 
 " highlight cursor guifg=white guibg=black
 set cursorline " highlight current line
-hi CursorLine   cterm=NONE ctermbg=grey ctermfg=white guibg=darkred guifg=white
+" hi CursorLine   cterm=NONE ctermbg=grey ctermfg=white guibg=darkred guifg=white
 
 set wildmenu " visual autocomplete for command menu
 
@@ -101,3 +102,6 @@ set wildmenu " visual autocomplete for command menu
 colorscheme xoria256
 
 "}}}
+
+
+" let g:SignatureMarkLineHL = "CursorLine"
