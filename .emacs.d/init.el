@@ -18,7 +18,7 @@
         ("melpa-stable" . "https://stable.melpa.org/packages/")
         ("org" . "https://orgmode.org/elpa/")
         ("melpa" . "http://melpa.milkbox.net/packages/"))
-      package-archive-priorities '(("melpa" . 15) ("gnu" . 10) ("org" . 5) ("melpa-stable" . 0)))
+      package-archive-priorities '(("melpa-stable" . 15) ("gnu" . 10) ("org" . 5) ("melpa" . 0)))
 
 ;; for portability to emacs instances without use-package already installed
 (unless (package-installed-p 'use-package)
@@ -51,7 +51,7 @@
 
   (add-hook 'prog-mode-hook #'display-line-numbers-mode) ; native line numbers in modes that contain "code"
 
-  ;; (pixel-scroll-mode t)
+  ;; (pixel-scroll-mode)
   ;; (setq pixel-resolution-fine-flag t)
   ;; (setq pixel-dead-time 0)
   )(ui-config)
@@ -91,18 +91,26 @@
 
   (setq load-prefer-newer t) ; prefer loading newer versions of packages and elisp files
 
-  (setq latex-run-command "texi2dvi --pdf --clean --verbose --batch")
-  (setq doc-view-resolution 800)
-  (add-hook 'doc-view-mode-hook 'auto-revert-mode) ; Auto reload on file changed
+  ;; (setq create-lockfiles nil)
+
+  ;; file backups
+  (setq
+   backup-by-copying t      ; don't clobber symlinks
+   backup-directory-alist
+   '((".*" . "~/.emacs.d/saves/"))    ; don't litter the fs tree
+   delete-old-versions t
+   kept-new-versions 6
+   kept-old-versions 2
+   version-control t)       ; use versioned backups
 
   ;; make emacs put all the custom-settings noise in this file, and then never load it
   (setq-default custom-file (expand-file-name ".custom.el" user-emacs-directory))
+  ;; (load custom-file)
 
-  ;; terminal stuff
   (defun zsh-panel ()
     "Toggle a terminal in a small pane at the bottom of the screen."
     (interactive)
-    (let ((new-name "term panel") (existing-name "*term panel*"))
+    (let ((new-name "vterm panel") (existing-name "*vterm panel*"))
       (let ((panel-window (get-buffer-window existing-name)))
         (if panel-window
             (delete-window panel-window)
@@ -111,65 +119,11 @@
 
           (if (get-buffer existing-name)
               (switch-to-buffer existing-name)
-            (ansi-term "/bin/zsh" new-name))))))
-
-  (defun zsh ()
-    "Start a terminal in a new buffer without having to provide a name."
-    (interactive)
-    (ansi-term "/bin/zsh" "term"))
+            (vterm))))))
 
   (global-set-key (kbd "C-x t") 'zsh-panel)
 
-  ;; allow command+v pasting in term mode
-  (eval-after-load "term"
-    '(define-key term-raw-map (kbd "s-v") 'term-paste))
   )(general-config)
-
-;; ---------------------------
-;; [ JS ]
-;; ---------------------------
-
-;; (use-package yasnippet
-;;   :commands yas-minor-mode
-;;   :config
-;;   (use-package yasnippet-snippets
-;;     :config (yas-reload-all)))
-
-;; (use-package js2-mode
-;;   :hook js-mode
-;;   :config
-;;   (setq js2-mode-show-parse-errors nil)
-;;   (setq js2-mode-show-strict-warnings nil)
-;;   )
-
-(defun my-js-mode-hook ()
-  ;; (use-package npm-mode)
-  ;; (npm-mode)
-  ;; (use-package javascript-eslint)
-  ;; (use-package prettier-js
-  ;;   :config (prettier-js-mode))
-  ;; (use-package json-mode)
-  (lsp)
-  ;; (lsp-ui-mode)
-  (setq js-indent-level 2))
-  ;; (yas-minor-mode))
-
-(add-hook 'js-mode-hook 'my-js-mode-hook)
-
-(use-package rjsx-mode :defer t)
-
-;; ---------------------------
-;; [ Language server ]
-;; ---------------------------
-
-(use-package lsp-mode
-  :commands lsp
-  :init
-  (setq lsp-auto-guess-root t)
-  (setq lsp-prefer-flymake :none)
-  )
-;; (use-package lsp-ui :commands lsp-ui-mode)
-(use-package company-lsp :commands company-lsp)
 
 ;; ---------------------------
 ;; [ Misc. packages ]
@@ -178,18 +132,6 @@
 (use-package diminish)
 (use-package eldoc :diminish)
 (use-package undo-tree :diminish)
-
-(use-package racket-mode
-  :mode ("\\.rkt\\'"))
-
-(use-package haskell-mode
-  :mode ("\\.hi\\'" "\\.hs\\'"))
-
-(use-package markdown-mode
-  :mode "\\.md$")
-
-(use-package yaml-mode
-  :mode "\\.yml\\'")
 
 (use-package magit
   :bind ("C-x m" . magit)
@@ -224,8 +166,6 @@
 
   (use-package helm-projectile
     :after (projectile)
-    ;; :bind
-    ;; ("C-x p" . helm-projectile)
     :config
     (setq projectile-completion-system 'helm)
     (helm-projectile-on)
@@ -248,6 +188,19 @@
 (use-package restclient :commands restclient-mode) ; awesome postman like mode
 
 ;; ---------------------------
+;; [ Language server ]
+;; ---------------------------
+
+(use-package lsp-mode
+  :commands lsp
+  :init
+  (setq lsp-auto-guess-root t)
+  (setq lsp-prefer-flymake :none)
+  )
+;; (use-package lsp-ui :commands lsp-ui-mode)
+(use-package company-lsp :commands company-lsp)
+
+;; ---------------------------
 ;; [ Evil ]
 ;; ---------------------------
 
@@ -261,8 +214,9 @@
   ;; initial evil state for these modes
   (evil-set-initial-state 'fundamental-mode 'normal)
   (evil-set-initial-state 'special-mode 'motion)
-  (evil-set-initial-state 'term-mode 'emacs)
-  (evil-set-initial-state 'eshell-mode 'emacs)
+  ;; (evil-set-initial-state 'term-mode 'emacs)
+  ;; (evil-set-initial-state 'eshell-mode 'emacs)
+  (evil-set-initial-state 'vterm-mode 'emacs)
   (evil-set-initial-state 'inferior-python-mode 'emacs)
   ;; bindings
   (global-set-key (kbd "M-j") (lambda() (interactive) (evil-scroll-line-down 3)))
@@ -281,10 +235,10 @@
     :config
     (global-evil-surround-mode))
 
-  (use-package ace-jump-mode
-    :config
-    (define-key evil-normal-state-map (kbd "SPC") 'ace-jump-mode)
-    (define-key evil-motion-state-map (kbd "SPC") 'ace-jump-mode))
+  ;; (use-package ace-jump-mode
+  ;;   :config
+  ;;   (define-key evil-normal-state-map (kbd "SPC") 'ace-jump-mode)
+  ;;   (define-key evil-motion-state-map (kbd "SPC") 'ace-jump-mode))
 
   ;; (use-package evil-collection
   ;;   ;; :after evil
@@ -299,28 +253,28 @@
 
 (use-package org
   :mode ("\\.org$" . org-mode)
-  :config
-  (setq org-latex-to-pdf-process '("texi2dvi --pdf --clean --verbose --batch %f"))
+  :init
   (setq org-hierarchical-todo-statistics nil)
-  (setq org-image-actual-width nil)
-  (setq org-startup-with-inline-images t)
   (setq org-cycle-separator-lines -2)
+  (setq org-startup-truncated nil)
+  (setq org-startup-with-inline-images t)
+  (setq org-image-actual-width nil)
+
+  (setq org-latex-to-pdf-process '("texi2dvi --pdf --clean --verbose --batch %f"))
+  (setq latex-run-command "texi2dvi --pdf --clean --verbose --batch")
 
   ;; org babel
   (setq org-babel-python-command "python3")
 
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((python . t) (js . t) (dot . t))
-   )
-
-  (add-hook 'org-mode-hook (lambda () (toggle-truncate-lines))) ; truncate lines
+  :config
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               '((python . t) (js . t) (dot . t)))
 
   (use-package org-bullets
     :hook (org-mode . org-bullets-mode))
 
-  ;; org-tree-slide, different style of presentation than org-present, both are good
-  ;; (use-package org-tree-slide :defer t)
+  ;; org-tree-slide, different style of presentation than org-present
+  (use-package org-tree-slide :commands org-tree-slide-mode)
   ;; org-present
   (use-package org-present
     :commands org-present
@@ -378,12 +332,11 @@
 (use-package dracula-theme :defer t)
 (use-package doom-themes :defer t)
 (use-package spacemacs-theme :defer t)
-(use-package solarized-theme :defer t)
 ;; (use-package all-the-icons :defer t)
 
-;; (setq my-theme nil)
+(setq my-theme nil)
 ;; (setq my-theme 'spacemacs-light)
-(setq my-theme 'dracula)
+;; (setq my-theme 'dracula)
 
 ;; If emacs started as a deamon, wait until frame exists to apply theme, otherwise apply now
 (if (daemonp)
@@ -393,7 +346,10 @@
                   (load-theme my-theme t))))
   (when my-theme (load-theme my-theme t)))
 
-;; minimalist, but nice mode line
+;; ---------------------------
+;; [ Modeline ]
+;; ---------------------------
+
 ;; (use-package moody
 ;;   :config
 ;;   (setq x-underline-at-descent-line t)
@@ -407,6 +363,58 @@
 ;;     (set-face-attribute 'mode-line          nil :box        nil)
 ;;     (set-face-attribute 'mode-line-inactive nil :box        nil)))
 ;;     ;; (set-face-attribute 'mode-line-inactive nil :background "#f9f2d9")))
+
+;; ---------------------------
+;; [ Languages ]
+;; ---------------------------
+
+;; [ JS ]
+
+;; (use-package yasnippet
+;;   :commands yas-minor-mode
+;;   :config
+;;   (use-package yasnippet-snippets
+;;     :config (yas-reload-all)))
+
+;; (use-package js2-mode
+;;   :hook js-mode
+;;   :config
+;;   (setq js2-mode-show-parse-errors nil)
+;;   (setq js2-mode-show-strict-warnings nil)
+;;   )
+
+(defun my-js-mode-hook ()
+  ;; (use-package npm-mode)
+  ;; (npm-mode)
+  ;; (use-package javascript-eslint)
+  ;; (use-package prettier-js
+  ;;   :config (prettier-js-mode))
+  ;; (use-package json-mode)
+  (lsp)
+  ;; (lsp-ui-mode)
+  (setq js-indent-level 2))
+  ;; (yas-minor-mode))
+
+(add-hook 'js-mode-hook 'my-js-mode-hook)
+
+(use-package rjsx-mode :defer t)
+
+;; [ Misc. languages ]
+
+(use-package haskell-mode
+  :mode ("\\.hi\\'" "\\.hs\\'"))
+
+(use-package markdown-mode
+  :mode "\\.md$")
+
+(use-package yaml-mode
+  :mode "\\.yml\\'")
+
+
+;; TEST VTERM
+(add-to-list 'load-path "~/Downloads/emacs-libvterm")
+(require 'vterm)
+
 
 ;; -- optimizations
 ;; resets garbage collection tresholds to default levels
