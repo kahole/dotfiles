@@ -4,9 +4,9 @@
 # Path to your oh-my-zsh installation.
 export ZSH=/Users/kristianhole/.oh-my-zsh
 
-ZSH_THEME="robbyrussell"
+# ZSH_THEME="robbyrussell"
 # ZSH_THEME="imajes"
-# ZSH_THEME="lambda"
+ZSH_THEME="lambda"
 # ZSH_THEME="sorin"
 
 DEFAULT_USER="kristianhole"
