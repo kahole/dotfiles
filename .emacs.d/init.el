@@ -37,8 +37,9 @@
 
 (defun ui-config ()
   (add-to-list 'default-frame-alist '(font . "Menlo 14"))
+
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
-  ;; mac windowing options
+  ;; mac window options
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   (add-to-list 'default-frame-alist '(ns-appearance . dark)) ; options (light|dark)
 
@@ -46,8 +47,13 @@
   (setq mouse-wheel-follow-mouse 't) ; scroll window under mouse
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
+  
 
   (show-paren-mode t) ; show matching parenthesis
+  (column-number-mode t)
+
+  ;; hmmm
+  ;; (add-hook 'prog-mode-hook #'hl-line-mode) ; highlight current line in modes that contain "code"
 
   (add-hook 'prog-mode-hook #'display-line-numbers-mode) ; native line numbers in modes that contain "code"
 
@@ -62,19 +68,34 @@
 
 (defun general-config ()
 
-  (setq inhibit-startup-message t) 
-
-  (setq-default indent-tabs-mode nil) ; spaces instead of tabs
-
+  ;; sane defaults
   (setq mode-require-final-newline nil)
+  (setq-default indent-tabs-mode nil) ; spaces instead of tabs
+  (setq scroll-step 1) ; navigate off-screen scroll one line at a time
+  (setq inhibit-startup-message t) 
 
   (electric-pair-mode t) ; smart auto-closing of parens
 
+  ;; files
+  (setq load-prefer-newer t) ; prefer loading newer versions of packages and elisp files
   (setq vc-follow-symlinks t) ; follow symlinks for git-controlled files into their repos
   (global-auto-revert-mode) ; reload buffer when file changed on disk
+  ;; (setq create-lockfiles nil)
 
-  (setq scroll-step 1) ; navigate off-screen scroll one line at a time
-  
+  ;; file backups
+  (setq
+   backup-by-copying t ; dont clobber symlinks
+   backup-directory-alist
+   '((".*" . "~/.emacs.d/saves/")) ; dont litter the fs tree
+   delete-old-versions t
+   kept-new-versions 4
+   kept-old-versions 2
+   version-control t) ; use versioned backups
+
+  (setq-default custom-file (expand-file-name ".custom.el" user-emacs-directory)) ; make emacs put all the custom-settings noise in this file, and then never load it
+  ;; (load custom-file)
+
+  ;; mac
   (setq mac-option-key-is-meta t)
   (setq mac-option-modifier 'meta)
   (setq mac-right-option-modifier nil)
@@ -89,24 +110,7 @@
   (setenv "PATH" (concat (getenv "PATH") ":/Users/kristianhole/bin:/usr/local/bin:/usr/local/bin:/Library/TeX/texbin:/usr/local/go/bin"))
   (setq exec-path (append exec-path '("/Users/kristianhole/bin" "/usr/local/bin" "/usr/local/bin" "/Library/TeX/texbin" "/usr/local/go/bin")))
 
-  (setq load-prefer-newer t) ; prefer loading newer versions of packages and elisp files
-
-  ;; (setq create-lockfiles nil)
-
-  ;; file backups
-  (setq
-   backup-by-copying t      ; don't clobber symlinks
-   backup-directory-alist
-   '((".*" . "~/.emacs.d/saves/"))    ; don't litter the fs tree
-   delete-old-versions t
-   kept-new-versions 6
-   kept-old-versions 2
-   version-control t)       ; use versioned backups
-
-  ;; make emacs put all the custom-settings noise in this file, and then never load it
-  (setq-default custom-file (expand-file-name ".custom.el" user-emacs-directory))
-  ;; (load custom-file)
-
+  ;; TODO: fix
   (defun zsh-panel ()
     "Toggle a terminal in a small pane at the bottom of the screen."
     (interactive)
@@ -122,7 +126,6 @@
             (vterm))))))
 
   (global-set-key (kbd "C-x t") 'zsh-panel)
-
   )(general-config)
 
 ;; ---------------------------
@@ -132,6 +135,9 @@
 (use-package diminish)
 (use-package eldoc :diminish)
 (use-package undo-tree :diminish)
+(use-package page-break-lines
+  :config
+  (global-page-break-lines-mode))
 
 (use-package magit
   :bind ("C-x m" . magit)
@@ -139,7 +145,6 @@
   (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
 
 (use-package projectile
-  ;; :defer t
   :config (projectile-mode))
 
 (use-package helm
@@ -186,19 +191,6 @@
 
 (use-package helm-spotify-plus :commands helm-spotify-plus)
 (use-package restclient :commands restclient-mode) ; awesome postman like mode
-
-;; ---------------------------
-;; [ Language server ]
-;; ---------------------------
-
-(use-package lsp-mode
-  :commands lsp
-  :init
-  (setq lsp-auto-guess-root t)
-  (setq lsp-prefer-flymake :none)
-  )
-;; (use-package lsp-ui :commands lsp-ui-mode)
-(use-package company-lsp :commands company-lsp)
 
 ;; ---------------------------
 ;; [ Evil ]
@@ -334,9 +326,9 @@
 (use-package spacemacs-theme :defer t)
 ;; (use-package all-the-icons :defer t)
 
-(setq my-theme nil)
+;; (setq my-theme nil)
 ;; (setq my-theme 'spacemacs-light)
-;; (setq my-theme 'dracula)
+(setq my-theme 'dracula)
 
 ;; If emacs started as a deamon, wait until frame exists to apply theme, otherwise apply now
 (if (daemonp)
@@ -367,6 +359,17 @@
 ;; ---------------------------
 ;; [ Languages ]
 ;; ---------------------------
+
+;; [ Language server (LSP) ]
+
+(use-package lsp-mode
+  :commands lsp
+  :init
+  (setq lsp-auto-guess-root t)
+  (setq lsp-prefer-flymake :none)
+  )
+;; (use-package lsp-ui :commands lsp-ui-mode)
+(use-package company-lsp :commands company-lsp)
 
 ;; [ JS ]
 
