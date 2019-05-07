@@ -95,14 +95,15 @@
   (setq-default custom-file (expand-file-name ".custom.el" user-emacs-directory)) ; make emacs put all the custom-settings noise in this file, and then never load it
   ;; (load custom-file)
 
-  ;; mac
-  (setq mac-option-key-is-meta t)
-  (setq mac-option-modifier 'meta)
-  (setq mac-right-option-modifier nil)
   (global-set-key (kbd "s-'") 'other-frame)
   (global-set-key (kbd "s-+") 'text-scale-increase)
   (global-set-key (kbd "s--") 'text-scale-decrease)
-  
+
+   ;; mac meta key
+  (setq mac-option-key-is-meta t)
+  (setq mac-option-modifier 'meta)
+  (setq mac-right-option-modifier nil)
+
   ;; load path from shell (on mac)
   ;; (if (eq system-type 'darwin)
   ;;     (use-package exec-path-from-shell :config (exec-path-from-shell-initialize)))
@@ -110,22 +111,19 @@
   (setenv "PATH" (concat (getenv "PATH") ":/Users/kristianhole/bin:/usr/local/bin:/usr/local/bin:/Library/TeX/texbin:/usr/local/go/bin"))
   (setq exec-path (append exec-path '("/Users/kristianhole/bin" "/usr/local/bin" "/usr/local/bin" "/Library/TeX/texbin" "/usr/local/go/bin")))
 
-  ;; TODO: fix
-  (defun zsh-panel ()
+  (defun vterm-panel ()
     "Toggle a terminal in a small pane at the bottom of the screen."
     (interactive)
-    (let ((new-name "vterm panel") (existing-name "*vterm panel*"))
-      (let ((panel-window (get-buffer-window existing-name)))
-        (if panel-window
-            (delete-window panel-window)
-          (evil-window-split)
-          (evil-window-decrease-height 16)
+    (let ((panel-buffer-name "vterm panel"))
+      (let ((panel-window (get-buffer-window panel-buffer-name)))
+        (if panel-window (delete-window panel-window)
+          (select-window (split-window-below -14))
+          (unless (get-buffer panel-buffer-name)
+            (let ((buffer (generate-new-buffer panel-buffer-name)))
+              (with-current-buffer buffer (vterm-mode))))
+          (switch-to-buffer panel-buffer-name)))))
 
-          (if (get-buffer existing-name)
-              (switch-to-buffer existing-name)
-            (vterm))))))
-
-  (global-set-key (kbd "C-x t") 'zsh-panel)
+  (global-set-key (kbd "C-x t") 'vterm-panel)
   )(general-config)
 
 ;; ---------------------------
@@ -231,12 +229,6 @@
   ;;   :config
   ;;   (define-key evil-normal-state-map (kbd "SPC") 'ace-jump-mode)
   ;;   (define-key evil-motion-state-map (kbd "SPC") 'ace-jump-mode))
-
-  ;; (use-package evil-collection
-  ;;   ;; :after evil
-  ;;   :config
-  ;;   (setq evil-collection-mode-list '(magit))
-  ;;   (evil-collection-init))
   )
 
 ;; ---------------------------
@@ -324,11 +316,13 @@
 (use-package dracula-theme :defer t)
 (use-package doom-themes :defer t)
 (use-package spacemacs-theme :defer t)
+(use-package gruvbox-theme :defer t)
 ;; (use-package all-the-icons :defer t)
 
 ;; (setq my-theme nil)
 ;; (setq my-theme 'spacemacs-light)
-(setq my-theme 'dracula)
+(setq my-theme 'doom-vibrant)
+;; (setq my-theme 'dracula)
 
 ;; If emacs started as a deamon, wait until frame exists to apply theme, otherwise apply now
 (if (daemonp)
@@ -365,19 +359,21 @@
 (use-package lsp-mode
   :commands lsp
   :init
+  ;; (use-package company-lsp :commands company-lsp)
   (setq lsp-auto-guess-root t)
   (setq lsp-prefer-flymake :none)
   )
-;; (use-package lsp-ui :commands lsp-ui-mode)
-(use-package company-lsp :commands company-lsp)
+;; ???
 
-;; [ JS ]
+;; (use-package lsp-ui :commands lsp-ui-mode)
 
 ;; (use-package yasnippet
 ;;   :commands yas-minor-mode
 ;;   :config
 ;;   (use-package yasnippet-snippets
 ;;     :config (yas-reload-all)))
+
+;; [ JS ]
 
 ;; (use-package js2-mode
 ;;   :hook js-mode
