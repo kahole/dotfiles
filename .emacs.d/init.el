@@ -48,13 +48,11 @@
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
   
-
   (show-paren-mode t) ; show matching parenthesis
   (column-number-mode t)
 
   ;; hmmm
-  ;; (add-hook 'prog-mode-hook #'hl-line-mode) ; highlight current line in modes that contain "code"
-
+  (add-hook 'prog-mode-hook #'hl-line-mode) ; highlight current line in modes that contain "code"
   (add-hook 'prog-mode-hook #'display-line-numbers-mode) ; native line numbers in modes that contain "code"
 
   ;; (pixel-scroll-mode)
@@ -111,19 +109,6 @@
   (setenv "PATH" (concat (getenv "PATH") ":/Users/kristianhole/bin:/usr/local/bin:/usr/local/bin:/Library/TeX/texbin:/usr/local/go/bin"))
   (setq exec-path (append exec-path '("/Users/kristianhole/bin" "/usr/local/bin" "/usr/local/bin" "/Library/TeX/texbin" "/usr/local/go/bin")))
 
-  (defun vterm-panel ()
-    "Toggle a terminal in a small pane at the bottom of the screen."
-    (interactive)
-    (let ((panel-buffer-name "vterm panel"))
-      (let ((panel-window (get-buffer-window panel-buffer-name)))
-        (if panel-window (delete-window panel-window)
-          (select-window (split-window-below -14))
-          (unless (get-buffer panel-buffer-name)
-            (let ((buffer (generate-new-buffer panel-buffer-name)))
-              (with-current-buffer buffer (vterm-mode))))
-          (switch-to-buffer panel-buffer-name)))))
-
-  (global-set-key (kbd "C-x t") 'vterm-panel)
   )(general-config)
 
 ;; ---------------------------
@@ -133,9 +118,10 @@
 (use-package diminish)
 (use-package eldoc :diminish)
 (use-package undo-tree :diminish)
-(use-package page-break-lines
-  :config
-  (global-page-break-lines-mode))
+;; (use-package page-break-lines
+;;   :diminish
+;;   :config
+;;   (global-page-break-lines-mode))
 
 (use-package magit
   :bind ("C-x m" . magit)
@@ -411,9 +397,24 @@
 
 
 ;; TEST VTERM
-(add-to-list 'load-path "~/Downloads/emacs-libvterm")
-(require 'vterm)
+;; (add-to-list 'load-path "~/Downloads/emacs-libvterm")
+;; (require 'vterm)
+(use-package vterm
+  :load-path "~/Downloads/emacs-libvterm"
+  :config
+  (defun vterm-panel ()
+    "Toggle a terminal in a small pane at the bottom of the screen."
+    (interactive)
+    (let ((panel-buffer-name "vterm panel"))
+      (let ((panel-window (get-buffer-window panel-buffer-name)))
+        (if panel-window (delete-window panel-window)
+          (select-window (split-window-below -14))
+          (unless (get-buffer panel-buffer-name)
+            (let ((buffer (generate-new-buffer panel-buffer-name)))
+              (with-current-buffer buffer (vterm-mode))))
+          (switch-to-buffer panel-buffer-name)))))
 
+  (global-set-key (kbd "C-x t") 'vterm-panel))
 
 ;; -- optimizations
 ;; resets garbage collection tresholds to default levels
