@@ -94,6 +94,7 @@
   ;; (load custom-file)
 
   (global-set-key (kbd "s-'") 'other-frame)
+  (global-set-key (kbd "s-f") 'select-frame-by-name)
   (global-set-key (kbd "s-+") 'text-scale-increase)
   (global-set-key (kbd "s--") 'text-scale-decrease)
 
@@ -139,6 +140,7 @@
   ("C-x y" . helm-show-kill-ring)
   ("C-x k" . helm-buffers-list)
   ("C-x b" . helm-mini)
+  ("C-x C-b" . helm-mini)
   ("C-x i" . helm-imenu)
   ("C-x p" . helm-projectile)
   :config
@@ -230,9 +232,12 @@
   (setq org-startup-truncated nil)
   (setq org-startup-with-inline-images t)
   (setq org-image-actual-width nil)
+  (setq org-src-tab-acts-natively t)
 
-  (setq org-latex-to-pdf-process '("texi2dvi --pdf --clean --verbose --batch %f"))
-  (setq latex-run-command "texi2dvi --pdf --clean --verbose --batch")
+  (setq org-agenda-files (list "~/todo.org")) 
+
+  ;; (setq org-latex-to-pdf-process '("texi2dvi --pdf --clean --verbose --batch %f"))
+  ;; (setq latex-run-command "texi2dvi --pdf --clean --verbose --batch")
 
   ;; org babel
   (setq org-babel-python-command "python3")
@@ -255,6 +260,20 @@
                 (lambda ()
                   (turn-off-evil-mode)
                   (org-present-big)
+                  (global-set-key (kbd "C-<") (lambda () (interactive)
+                                                (turn-on-evil-mode)
+                                                (org-present-show-cursor)
+                                                (org-present-read-write)))
+                  (global-set-key (kbd "C->") (lambda () (interactive)
+                                                (org-present-quit)
+                                                (org-babel-tangle)
+                                                (org-present)
+                                                (text-scale-decrease 4)))
+                  ;; (global-set-key (kbd "C-n") (lambda () (interactive)
+                  ;;                               (turn-off-evil-mode)
+                  ;;                               (org-present-hide-cursor)
+                  ;;                               (org-present-read-only)))
+                                                ;; (org-babel-tangle-file "~/netlight/gl_edge/gl_webgl/pres.org")))
                   (org-display-inline-images)
                   (org-present-hide-cursor)
                   (org-present-read-only)
@@ -387,8 +406,14 @@
 
 ;; [ Misc. languages ]
 
-(use-package haskell-mode
-  :mode ("\\.hi\\'" "\\.hs\\'"))
+;; (use-package haskell-mode
+;;   :mode ("\\.hi\\'" "\\.hs\\'"))
+
+(use-package elixir-mode
+  :mode ("\\.ex\\'" "\\.exs\\'"))
+
+(use-package go-mode
+  :mode ("\\.go\\'"))
 
 (use-package markdown-mode
   :mode "\\.md$")
@@ -401,7 +426,7 @@
 ;; (add-to-list 'load-path "~/Downloads/emacs-libvterm")
 ;; (require 'vterm)
 (use-package vterm
-  :load-path "~/Downloads/emacs-libvterm"
+  :load-path "~/.emacs.d/custom_packages/emacs-libvterm"
   :config
   (defun vterm-panel ()
     "Toggle a terminal in a small pane at the bottom of the screen."
