@@ -9,6 +9,9 @@
 ;; [ Package system ]
 ;; ---------------------------
 
+;; TODO:
+;;  - Switch to "straight" package manager
+
 ;; (require 'package)
 (when (version<= emacs-version "27.0")
     (package-initialize))
@@ -104,11 +107,12 @@
   (setq mac-right-option-modifier nil)
 
   ;; load path from shell (on mac)
-  ;; (if (eq system-type 'darwin)
-  ;;     (use-package exec-path-from-shell :config (exec-path-from-shell-initialize)))
+  (if (eq system-type 'darwin)
+      (use-package exec-path-from-shell :config (exec-path-from-shell-initialize)))
   ;; manually setting the path.. a lot faster than ^
-  (setenv "PATH" (concat (getenv "PATH") ":/Users/kristianhole/bin:/usr/local/bin:/usr/local/bin:/Library/TeX/texbin:/usr/local/go/bin"))
-  (setq exec-path (append exec-path '("/Users/kristianhole/bin" "/usr/local/bin" "/usr/local/bin" "/Library/TeX/texbin" "/usr/local/go/bin")))
+  ;; (setenv "PATH" (concat (getenv "PATH") ":/usr/local/opt/python/libexec/bin:/usr/local/opt/python/libexec/bin:/Users/khol/.nvm/versions/node/v12.8.0/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"))
+  ;; (setq exec-path (append exec-path '("/Users/khol/bin" "/usr/local/bin" "/usr/local/bin" "/Library/TeX/texbin" "/usr/local/go/bin")))
+
 
   )(general-config)
 
@@ -236,9 +240,6 @@
 
   (setq org-agenda-files (list "~/todo.org")) 
 
-  ;; (setq org-latex-to-pdf-process '("texi2dvi --pdf --clean --verbose --batch %f"))
-  ;; (setq latex-run-command "texi2dvi --pdf --clean --verbose --batch")
-
   ;; org babel
   (setq org-babel-python-command "python3")
 
@@ -250,7 +251,15 @@
     :hook (org-mode . org-bullets-mode))
 
   ;; org-tree-slide, different style of presentation than org-present
-  (use-package org-tree-slide :commands org-tree-slide-mode)
+  (use-package org-tree-slide
+    :commands org-tree-slide-mode
+    :config
+    (add-hook 'org-tree-slide-mode-hook
+              (lambda ()
+                (org-tree-slide-slide-in-effect-toggle)
+                (org-tree-slide-display-header-toggle)
+                )))
+
   ;; org-present
   (use-package org-present
     :commands org-present
@@ -269,11 +278,6 @@
                                                 (org-babel-tangle)
                                                 (org-present)
                                                 (text-scale-decrease 4)))
-                  ;; (global-set-key (kbd "C-n") (lambda () (interactive)
-                  ;;                               (turn-off-evil-mode)
-                  ;;                               (org-present-hide-cursor)
-                  ;;                               (org-present-read-only)))
-                                                ;; (org-babel-tangle-file "~/netlight/gl_edge/gl_webgl/pres.org")))
                   (org-display-inline-images)
                   (org-present-hide-cursor)
                   (org-present-read-only)
@@ -310,8 +314,8 @@
 
 (add-hook 'emacs-startup-hook
           (lambda ()
-              (insert-button ";;  - ntnu todo.org" 'follow-link t 'action (lambda (x) (find-file "~/ntnu/todo.org")))
-              (insert-button "\n;;  - todo.org" 'follow-link t 'action (lambda (x) (find-file "~/privat/todo.org")))
+              (insert-button ";;  - todo.org" 'follow-link t 'action (lambda (x) (find-file "~/todo.org")))
+              (insert-button "\n;;  - plan.org" 'follow-link t 'action (lambda (x) (find-file "~/netlight/utviklingsplan/plan.org")))
               (insert-button "\n;;  - init.el" 'follow-link t 'action (lambda (x) (find-file user-init-file)))
               (text-scale-set 3)))
 
@@ -327,8 +331,8 @@
 
 ;; (setq my-theme nil)
 ;; (setq my-theme 'spacemacs-light)
-(setq my-theme 'doom-vibrant)
-;; (setq my-theme 'dracula)
+;; (setq my-theme 'doom-vibrant)
+(setq my-theme 'dracula)
 
 ;; If emacs started as a deamon, wait until frame exists to apply theme, otherwise apply now
 (if (daemonp)
@@ -337,24 +341,6 @@
                 (with-selected-frame frame
                   (load-theme my-theme t))))
   (when my-theme (load-theme my-theme t)))
-
-;; ---------------------------
-;; [ Modeline ]
-;; ---------------------------
-
-;; (use-package moody
-;;   :config
-;;   (setq x-underline-at-descent-line t)
-;;   (setq moody-slant-function 'moody-slant-apple-rgb)
-;;   (moody-replace-mode-line-buffer-identification)
-;;   (moody-replace-vc-mode)
-;;   (let ((line (face-attribute 'mode-line :underline)))
-;;     (set-face-attribute 'mode-line          nil :overline   line)
-;;     (set-face-attribute 'mode-line-inactive nil :overline   line)
-;;     (set-face-attribute 'mode-line-inactive nil :underline  line)
-;;     (set-face-attribute 'mode-line          nil :box        nil)
-;;     (set-face-attribute 'mode-line-inactive nil :box        nil)))
-;;     ;; (set-face-attribute 'mode-line-inactive nil :background "#f9f2d9")))
 
 ;; ---------------------------
 ;; [ Languages ]
@@ -388,6 +374,7 @@
 ;;   (setq js2-mode-show-strict-warnings nil)
 ;;   )
 
+;; TODO: Emacs 27 har mye bedre js-mode visstnok
 (defun my-js-mode-hook ()
   ;; (use-package npm-mode)
   ;; (npm-mode)
@@ -421,13 +408,10 @@
 (use-package yaml-mode
   :mode "\\.yml\\'")
 
-
-;; TEST VTERM
-;; (add-to-list 'load-path "~/Downloads/emacs-libvterm")
-;; (require 'vterm)
 (use-package vterm
-  :load-path "~/.emacs.d/custom_packages/emacs-libvterm"
+  ;; :load-path "~/.emacs.d/custom_packages/emacs-libvterm"
   :config
+  (setq vterm-shell "/bin/bash")
   (defun vterm-panel ()
     "Toggle a terminal in a small pane at the bottom of the screen."
     (interactive)
