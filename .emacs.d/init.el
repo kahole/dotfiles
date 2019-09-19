@@ -13,7 +13,7 @@
 ;;  - Switch to "straight" package manager
 
 ;; (require 'package)
-(when (version<= emacs-version "27.0")
+(when (version<= emacs-version "28.0")
     (package-initialize))
 
 (setq package-archives
@@ -108,10 +108,11 @@
 
   ;; load path from shell (on mac)
   (if (eq system-type 'darwin)
-      (use-package exec-path-from-shell :config (exec-path-from-shell-initialize)))
-  ;; manually setting the path.. a lot faster than ^
-  ;; (setenv "PATH" (concat (getenv "PATH") ":/usr/local/opt/python/libexec/bin:/usr/local/opt/python/libexec/bin:/Users/khol/.nvm/versions/node/v12.8.0/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"))
-  ;; (setq exec-path (append exec-path '("/Users/khol/bin" "/usr/local/bin" "/usr/local/bin" "/Library/TeX/texbin" "/usr/local/go/bin")))
+      ;; (use-package exec-path-from-shell :config (exec-path-from-shell-initialize)))
+      ;; manually setting the path.. a lot faster than ^
+      (progn
+       (setenv "PATH" (concat (getenv "PATH") ":/usr/local/opt/python/libexec/bin:/Users/khol/.nvm/versions/node/v12.8.0/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/TeX/texbin:/usr/local/share/dotnet:~/.dotnet/tools"))
+       (setq exec-path (append exec-path (split-string (getenv "PATH") ":")))))
 
 
   )(general-config)
@@ -374,7 +375,7 @@
 ;;   (setq js2-mode-show-strict-warnings nil)
 ;;   )
 
-;; TODO: Emacs 27 har mye bedre js-mode visstnok
+;; Emacs 27 har mye bedre js-mode visstnok.. supports react jsx code in js files
 (defun my-js-mode-hook ()
   ;; (use-package npm-mode)
   ;; (npm-mode)
@@ -382,16 +383,20 @@
   ;; (use-package prettier-js
   ;;   :config (prettier-js-mode))
   ;; (use-package json-mode)
-  (lsp)
+  ;; (lsp)
   ;; (lsp-ui-mode)
   (setq js-indent-level 2))
   ;; (yas-minor-mode))
 
 (add-hook 'js-mode-hook 'my-js-mode-hook)
 
-(use-package rjsx-mode :defer t)
+;; (use-package rjsx-mode :defer t)
 
 ;; [ Misc. languages ]
+
+;; Lisp
+(add-hook 'elisp-mode-hook 'prettify-symbols-mode)
+(add-hook 'lisp-mode-hook 'prettify-symbols-mode)
 
 ;; (use-package haskell-mode
 ;;   :mode ("\\.hi\\'" "\\.hs\\'"))
@@ -410,8 +415,13 @@
 
 (use-package vterm
   ;; :load-path "~/.emacs.d/custom_packages/emacs-libvterm"
+  :init
+  (use-package hide-mode-line)
+  (add-hook 'vterm-mode-hook #'hide-mode-line-mode)
   :config
   (setq vterm-shell "/bin/bash")
+
+  
   (defun vterm-panel ()
     "Toggle a terminal in a small pane at the bottom of the screen."
     (interactive)

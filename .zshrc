@@ -1,5 +1,5 @@
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/kristianhole/.oh-my-zsh
+export ZSH=/Users/khol/.oh-my-zsh
 
 # ZSH_THEME="robbyrussell"
 # ZSH_THEME="imajes"
@@ -7,7 +7,7 @@ ZSH_THEME="lambda"
 # ZSH_THEME="sorin"
 # ZSH_THEME="agnoster"
 
-DEFAULT_USER="kristianhole"
+DEFAULT_USER="khol"
 
 #plugins=(git osx zsh-autosuggestions)
 # plugins=(osx zsh-syntax-highlighting vi-mode zsh-autosuggestions)
@@ -15,6 +15,14 @@ DEFAULT_USER="kristianhole"
 plugins=(zsh-syntax-highlighting zsh-autosuggestions)
 
 source $ZSH/oh-my-zsh.sh
+
+# nvm config
+export NVM_DIR="$HOME/.nvm"
+. "$(brew --prefix nvm)/nvm.sh"
+
+
+# python3 path fix
+export PATH="/usr/local/opt/python/libexec/bin:$PATH"
 
 # don't insert tab when 0 chars to left of cursor
 # zstyle ':completion:*' insert-tab false
