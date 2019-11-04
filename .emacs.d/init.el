@@ -209,6 +209,9 @@
   (bind-key* "M-k" (lambda() (interactive) (evil-scroll-line-up 3)))
   (define-key evil-emacs-state-map (kbd "C-w") 'evil-window-map)
   (define-key evil-motion-state-map (kbd "TAB") nil)
+  
+  (define-key evil-normal-state-map (kbd "J") 'evil-forward-section-begin)
+  (define-key evil-normal-state-map (kbd "K") 'evil-backward-section-begin)
 
   (use-package evil-commentary
     :diminish
