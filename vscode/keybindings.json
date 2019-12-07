@@ -1,20 +1,32 @@
 // Place your key bindings in this file to override the defaultsauto[]
 [
   {
-    "key": "ctrl+h",
+    "key": "ctrl+w h",
     "command": "workbench.action.navigateLeft"
   },
   {
-    "key": "ctrl+l",
+    "key": "ctrl+w l",
     "command": "workbench.action.navigateRight"
   },
   {
-    "key": "ctrl+k",
+    "key": "ctrl+w k",
     "command": "workbench.action.navigateUp"
   },
   {
-    "key": "ctrl+j",
+    "key": "ctrl+w j",
     "command": "workbench.action.navigateDown"
+  },
+  {
+    "key": "ctrl+w s",
+    "command": "workbench.action.splitEditorDown"
+  },
+  {
+    "key": "ctrl+w v",
+    "command": "workbench.action.splitEditor"
+  },
+  {
+    "key": "ctrl+w q",
+    "command": "workbench.action.closeActiveEditor"
   },
   {
     "key": "ctrl+[Backquote]",
