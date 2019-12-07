@@ -1,0 +1,59 @@
+// Place your key bindings in this file to override the defaultsauto[]
+[
+  {
+    "key": "ctrl+[Backquote]",
+    "command": "workbench.action.quickOpenNavigateNextInEditorPicker",
+    "when": "inEditorsPicker && inQuickOpen"
+  },
+  {
+    "key": "ctrl+tab",
+    "command": "-workbench.action.quickOpenNavigateNextInEditorPicker",
+    "when": "inEditorsPicker && inQuickOpen"
+  },
+  {
+    "key": "ctrl+shift+[Backquote]",
+    "command": "workbench.action.quickOpenNavigatePreviousInEditorPicker",
+    "when": "inEditorsPicker && inQuickOpen"
+  },
+  {
+    "key": "ctrl+shift+tab",
+    "command": "-workbench.action.quickOpenNavigatePreviousInEditorPicker",
+    "when": "inEditorsPicker && inQuickOpen"
+  },
+  {
+    "key": "ctrl+tab",
+    "command": "workbench.action.nextEditor"
+  },
+  {
+    "key": "alt+cmd+right",
+    "command": "-workbench.action.nextEditor"
+  },
+  {
+    "key": "ctrl+tab",
+    "command": "-workbench.action.openNextRecentlyUsedEditorInGroup"
+  },
+  {
+    "key": "ctrl+shift+tab",
+    "command": "workbench.action.previousEditor"
+  },
+  {
+    "key": "alt+cmd+left",
+    "command": "-workbench.action.previousEditor"
+  },
+  {
+    "key": "ctrl+shift+tab",
+    "command": "-workbench.action.openPreviousRecentlyUsedEditorInGroup"
+  },
+  {
+    "key": "cmd+'",
+    "command": "workbench.action.quickSwitchWindow"
+  },
+  {
+    "key": "ctrl+x b",
+    "command": "workbench.action.showAllEditors"
+  },
+  {
+    "key": "alt+cmd+tab",
+    "command": "-workbench.action.showAllEditors"
+  }
+]
