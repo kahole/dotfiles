@@ -180,6 +180,12 @@
   :diminish
   :config (which-key-mode))
 
+(use-package persp-mode
+  :bind
+  ("C-x -" . persp-frame-switch)
+  :init
+  (persp-mode t))
+
 (use-package helm-spotify-plus :commands helm-spotify-plus)
 (use-package restclient :commands restclient-mode) ; awesome postman like mode
 
