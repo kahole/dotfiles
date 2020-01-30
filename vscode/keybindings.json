@@ -29,7 +29,7 @@
     "command": "workbench.action.closeActiveEditor"
   },
   {
-    "key": "ctrl+[Backquote]",
+    "key": "ctrl+x t",
     "command": "workbench.action.quickOpenNavigateNextInEditorPicker",
     "when": "inEditorsPicker && inQuickOpen"
   },
@@ -83,5 +83,23 @@
   {
     "key": "alt+cmd+tab",
     "command": "-workbench.action.showAllEditors"
+  },
+  {
+    "key": "ctrl+x m",
+    "command": "extension.magit"
+  },
+  {
+    "key": "ctrl+x b",
+    "command": "workbench.action.openPreviousRecentlyUsedEditorInGroup"
+  },
+  {
+    "key": "ctrl+c ctrl+c",
+    "command": "rest-client.request",
+    "when": "editorTextFocus && editorLangId == 'http'"
+  },
+  {
+    "key": "alt+cmd+r",
+    "command": "-rest-client.request",
+    "when": "editorTextFocus && editorLangId == 'http'"
   }
 ]
