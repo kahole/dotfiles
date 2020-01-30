@@ -1,5 +1,4 @@
 {
-    "window.zoomLevel": 1,
     "breadcrumbs.enabled": false,
     "workbench.editor.enablePreviewFromQuickOpen": false,
     "workbench.editor.enablePreview": false,
@@ -9,19 +8,22 @@
     "workbench.activityBar.visible": false,
     "workbench.editor.tabSizing": "shrink",
     "diffEditor.renderSideBySide": false,
-
     "[javascript]": {
         "editor.tabSize": 2
     },
     "[typescript]": {
-        "editor.tabSize": 2
+        "editor.tabSize": 2,
+        "editor.formatOnSave": true
     },
-
+    // "editor.renderLineHighlight": "line",
     "vim.easymotion": true,
     "vim.sneak": true,
     "vim.incsearch": true,
     "vim.useSystemClipboard": true,
     // "vim.useCtrlKeys": true,
     "vim.hlsearch": true,
-    "vim.leader": "<space>"
+    "vim.leader": "<space>",
+    "editor.multiCursorModifier": "alt",
+    "[git-commit]": {},
+    "terminal.integrated.rendererType": "experimentalWebgl",
 }
