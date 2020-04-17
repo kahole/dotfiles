@@ -2,7 +2,6 @@
     "breadcrumbs.enabled": false,
     "workbench.editor.enablePreviewFromQuickOpen": false,
     "workbench.editor.enablePreview": false,
-    "workbench.colorTheme": "Dracula",
     "workbench.statusBar.visible": true,
     "editor.minimap.enabled": false,
     "workbench.activityBar.visible": false,
@@ -15,15 +14,17 @@
         "editor.tabSize": 2,
         "editor.formatOnSave": true
     },
-    // "editor.renderLineHighlight": "line",
     "vim.easymotion": true,
     "vim.sneak": true,
     "vim.incsearch": true,
     "vim.useSystemClipboard": true,
-    // "vim.useCtrlKeys": true,
+    "vim.useCtrlKeys": true,
     "vim.hlsearch": true,
     "vim.leader": "<space>",
     "editor.multiCursorModifier": "alt",
-    "[git-commit]": {},
     "terminal.integrated.rendererType": "experimentalWebgl",
+    "workbench.editor.showTabs": true,
+    "editor.fontFamily": "Menlo",
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "diffEditor.ignoreTrimWhitespace": true
 }
