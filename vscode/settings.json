@@ -26,5 +26,6 @@
     "workbench.editor.showTabs": true,
     "editor.fontFamily": "Menlo",
     "typescript.updateImportsOnFileMove.enabled": "always",
-    "diffEditor.ignoreTrimWhitespace": true
+    "diffEditor.ignoreTrimWhitespace": true,
+    "workbench.colorTheme": "Gruvbox Dark Hard"
 }
