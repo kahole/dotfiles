@@ -88,11 +88,11 @@
     "command": "-rest-client.request",
     "when": "editorTextFocus && editorLangId == 'http'"
   },
-  {
-    "key": "tab",
-    "command": "editor.toggleFold",
-    "when": "editorTextFocus && editorLangId == 'markdown'"
-  },
+  // {
+  //   "key": "tab",
+  //   "command": "editor.toggleFold",
+  //   "when": "editorTextFocus && editorLangId == 'markdown'"
+  // },
   {
     "key": "cmd+r",
     "command": "-workbench.action.reloadWindow",
@@ -113,18 +113,8 @@
     "command": "-extension.vim_tab",
     "when": "editorFocus && vim.active && !inDebugRepl && vim.mode != 'Insert'"
   },
-  // {
-  //   "key": "o",
-  //   "command": "magit.discard-at-point",
-  //   "when": "editorTextFocus && editorLangId == 'magit'"
-  // },
-  // {
-  //   "key": "k",
-  //   "command": "-magit.discard-at-point",
-  //   "when": "editorTextFocus && editorLangId == 'magit'"
-  // },
   {
-    "key": "ctrl+x t",
+    "key": "alt+x t",
     "command": "workbench.action.terminal.toggleTerminal"
   },
   {
