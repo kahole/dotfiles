@@ -33,11 +33,6 @@
     "when": "inEditorsPicker && inQuickOpen"
   },
   {
-    "key": "ctrl+shift+[Backquote]",
-    "command": "workbench.action.quickOpenNavigatePreviousInEditorPicker",
-    "when": "inEditorsPicker && inQuickOpen"
-  },
-  {
     "key": "ctrl+shift+tab",
     "command": "-workbench.action.quickOpenNavigatePreviousInEditorPicker",
     "when": "inEditorsPicker && inQuickOpen"
@@ -67,19 +62,11 @@
     "command": "-workbench.action.openPreviousRecentlyUsedEditorInGroup"
   },
   {
-    "key": "cmd+'",
-    "command": "workbench.action.quickSwitchWindow"
-  },
-  {
-    "key": "ctrl+x b",
+    "key": "alt+x b",
     "command": "workbench.action.showAllEditors"
   },
   {
-    "key": "alt+cmd+tab",
-    "command": "-workbench.action.showAllEditors"
-  },
-  {
-    "key": "ctrl+c ctrl+c",
+    "key": "alt+c alt+c",
     "command": "rest-client.request",
     "when": "editorTextFocus && editorLangId == 'http'"
   },
@@ -103,16 +90,16 @@
     "command": "workbench.action.debug.start",
     "when": "!inDebugMode"
   },
-  {
-    "key": "tab",
-    "command": "extension.vim_tab",
-    "when": "editorFocus && vim.active && !inDebugRepl && vim.mode != 'Insert' && !editorLangId == 'magit'"
-  },
-  {
-    "key": "tab",
-    "command": "-extension.vim_tab",
-    "when": "editorFocus && vim.active && !inDebugRepl && vim.mode != 'Insert'"
-  },
+  // {
+  //   "key": "tab",
+  //   "command": "extension.vim_tab",
+  //   "when": "editorFocus && vim.active && vim.mode != 'Insert' && !editorLangId == 'magit'"
+  // },
+  // {
+  //   "key": "tab",
+  //   "command": "-extension.vim_tab",
+  //   "when": "editorFocus && vim.active && vim.mode != 'Insert'"
+  // },
   {
     "key": "alt+x t",
     "command": "workbench.action.terminal.toggleTerminal"
@@ -120,5 +107,5 @@
   {
     "key": "ctrl+`",
     "command": "-workbench.action.terminal.toggleTerminal"
-  }
+  },
 ]

@@ -1,19 +1,27 @@
 {
+    "window.zoomLevel": 1,
     "breadcrumbs.enabled": false,
     "workbench.editor.enablePreviewFromQuickOpen": false,
     "workbench.editor.enablePreview": false,
     "workbench.statusBar.visible": true,
-    "editor.minimap.enabled": false,
     "workbench.activityBar.visible": false,
     "workbench.editor.tabSizing": "shrink",
+    "editor.minimap.enabled": false,
     "diffEditor.renderSideBySide": false,
     "[javascript]": {
+        "editor.tabSize": 2
+    },
+    "[json]": {
         "editor.tabSize": 2
     },
     "[typescript]": {
         "editor.tabSize": 2,
         "editor.formatOnSave": true
     },
+    "[csharp]": {
+        "editor.formatOnSave": true
+    },
+    // "editor.renderLineHighlight": "line",
     "vim.easymotion": true,
     "vim.sneak": true,
     "vim.incsearch": true,
@@ -22,10 +30,23 @@
     "vim.hlsearch": true,
     "vim.leader": "<space>",
     "editor.multiCursorModifier": "alt",
-    "terminal.integrated.rendererType": "experimentalWebgl",
+    "csharp.unitTestDebuggingOptions": {
+        "env": {
+        }
+    },
     "workbench.editor.showTabs": true,
     "editor.fontFamily": "Menlo",
+    // "editor.fontWeight": "bold",
     "typescript.updateImportsOnFileMove.enabled": "always",
-    "diffEditor.ignoreTrimWhitespace": true,
+    "debug.openDebug": "neverOpen",
+    "csharp.suppressDotnetRestoreNotification": true,
+    "csharp.semanticHighlighting.enabled": true,
+    "omnisharp.disableMSBuildDiagnosticWarning": true,
+    "rest-client.enableTelemetry": false,
+    "FSharp.useSdkScripts": true,
+    "editor.accessibilitySupport": "off",
+    "FSharp.showExplorerOnStartup": false,
     "workbench.colorTheme": "Gruvbox Dark Hard"
+    // "powermode.enabled": true,
+    // "powermode.presets": "magic"
 }
