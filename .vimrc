@@ -10,12 +10,13 @@ endif
 call plug#begin('~/.vim/plugged')
 
 Plug 'scrooloose/nerdtree'
-Plug 'flazz/vim-colorschemes'
+" Plug 'flazz/vim-colorschemes'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'Raimondi/delimitMate'
 Plug 'mhinz/vim-startify'
 Plug 'kshenoy/vim-signature'
+Plug 'dracula/vim', { 'as': 'dracula' }
 
 call plug#end()
 
@@ -105,7 +106,8 @@ set wildmenu " visual autocomplete for command menu
 "Colors {{{
 
 " colorscheme slate
-colorscheme xoria256
+" colorscheme xoria256
+" colorscheme dracula
 
 "}}}
 

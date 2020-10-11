@@ -9,11 +9,8 @@
 ;; [ Package system ]
 ;; ---------------------------
 
-;; TODO:
-;;  - Switch to "straight" package manager
-
 ;; (require 'package)
-(when (version<= emacs-version "28.0")
+(when (version< emacs-version "27.0")
     (package-initialize))
 
 (setq package-archives
@@ -101,6 +98,12 @@
   (global-set-key (kbd "s-+") 'text-scale-increase)
   (global-set-key (kbd "s--") 'text-scale-decrease)
 
+  ;; Trust self signed localhost
+  ;; /Users/khol/.private/localhost.pem
+  ;;(add-to-list 'gnutls-trustfiles "/Users/khol/.private/localhost.pem")
+  ;;(add-to-list 'gnutls-trustfiles "/Users/khol/.private/localhost2.pem")
+
+
    ;; mac meta key
   (setq mac-option-key-is-meta t)
   (setq mac-option-modifier 'meta)
@@ -108,11 +111,11 @@
 
   ;; load path from shell (on mac)
   (if (eq system-type 'darwin)
-      ;; (use-package exec-path-from-shell :config (exec-path-from-shell-initialize)))
+      (use-package exec-path-from-shell :config (exec-path-from-shell-initialize)))
       ;; manually setting the path.. a lot faster than ^
-      (progn
-       (setenv "PATH" (concat (getenv "PATH") ":/usr/local/opt/python/libexec/bin:/Users/khol/.nvm/versions/node/v12.8.0/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/TeX/texbin:/usr/local/share/dotnet:~/.dotnet/tools"))
-       (setq exec-path (append exec-path (split-string (getenv "PATH") ":")))))
+      ;; (progn
+      ;;  (setenv "PATH" (concat (getenv "PATH") ":/usr/local/opt/python/libexec/bin:/Users/khol/.nvm/versions/node/v12.8.0/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/sbin:/Library/TeX/texbin:/usr/local/share/dotnet:~/.dotnet/tools"))
+      ;;  (setq exec-path (append exec-path (split-string (getenv "PATH") ":")))))
 
 
   )(general-config)
@@ -130,8 +133,9 @@
 ;;   (global-page-break-lines-mode))
 
 (use-package magit
-  :bind ("C-x m" . magit)
+  :bind ("C-x g" . magit)
   :config
+  (setq magit-diff-hide-trailing-cr-characters t)
   (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
 
 (use-package projectile
@@ -171,6 +175,7 @@
   ;; :defer t
   :config
   (global-company-mode)
+  (setq company-dabbrev-downcase nil)
   (setq company-selection-wrap-around t)
   (define-key company-active-map [tab] 'company-complete)
   (define-key company-active-map (kbd "C-n") 'company-select-next)
@@ -180,14 +185,19 @@
   :diminish
   :config (which-key-mode))
 
-(use-package persp-mode
-  :bind
-  ("C-x -" . persp-frame-switch)
-  :init
-  (persp-mode t))
+;; (use-package persp-mode
+;;   :bind
+;;   ("C-x -" . persp-frame-switch)
+;;   ("C-x /" . persp-frame-switch)
+;;   :init
+;;   (persp-mode t))
+
 
 (use-package helm-spotify-plus :commands helm-spotify-plus)
-(use-package restclient :commands restclient-mode) ; awesome postman like mode
+
+(use-package restclient
+  ;; :commands restclient-mode
+  :mode ("\\.http$" . restclient-mode))
 
 ;; ---------------------------
 ;; [ Evil ]
@@ -239,10 +249,10 @@
 ;; ---------------------------
 
 (use-package org
-  :mode ("\\.org$" . org-mode)
+  ;; :mode ("\\.org\\'" . org-mode)
   :init
   (setq org-hierarchical-todo-statistics nil)
-  (setq org-cycle-separator-lines -2)
+  ;; (setq org-cycle-separator-lines -2)
   (setq org-startup-truncated nil)
   (setq org-startup-with-inline-images t)
   (setq org-image-actual-width nil)
@@ -324,7 +334,8 @@
 
 (add-hook 'emacs-startup-hook
           (lambda ()
-              (insert-button ";;  - todo.org" 'follow-link t 'action (lambda (x) (find-file "~/todo.org")))
+              (insert-button ";;  - elkjop/todo.org" 'follow-link t 'action (lambda (x) (find-file "~/elkjop/todo.org")))
+              (insert-button "\n;;  - todo.org" 'follow-link t 'action (lambda (x) (find-file "~/todo.org")))
               (insert-button "\n;;  - plan.org" 'follow-link t 'action (lambda (x) (find-file "~/netlight/utviklingsplan/plan.org")))
               (insert-button "\n;;  - init.el" 'follow-link t 'action (lambda (x) (find-file user-init-file)))
               (text-scale-set 3)))
@@ -343,6 +354,7 @@
 ;; (setq my-theme 'spacemacs-light)
 ;; (setq my-theme 'doom-vibrant)
 (setq my-theme 'dracula)
+;; (setq my-theme 'gruvbox-dark-hard)
 
 ;; If emacs started as a deamon, wait until frame exists to apply theme, otherwise apply now
 (if (daemonp)
@@ -358,14 +370,13 @@
 
 ;; [ Language server (LSP) ]
 
-(use-package lsp-mode
-  :commands lsp
-  :init
-  ;; (use-package company-lsp :commands company-lsp)
-  (setq lsp-auto-guess-root t)
-  (setq lsp-prefer-flymake :none)
-  )
-;; ???
+;; (use-package lsp-mode
+;;   :commands lsp
+;;   :init
+;;   (use-package company-lsp :commands company-lsp)
+;;   (setq lsp-enable-snippet nil)
+;;   (setq lsp-auto-guess-root t)
+;;   (setq lsp-prefer-flymake :none))
 
 ;; (use-package lsp-ui :commands lsp-ui-mode)
 
@@ -375,16 +386,12 @@
 ;;   (use-package yasnippet-snippets
 ;;     :config (yas-reload-all)))
 
-;; [ JS ]
-
-;; (use-package js2-mode
-;;   :hook js-mode
+;; (use-package eglot
+;;   :commands eglot-ensure
 ;;   :config
-;;   (setq js2-mode-show-parse-errors nil)
-;;   (setq js2-mode-show-strict-warnings nil)
-;;   )
+;;   (add-to-list 'eglot-server-programs '(js-mode . ("typescript-language-server" "--stdio"))))
 
-;; Emacs 27 har mye bedre js-mode visstnok.. supports react jsx code in js files
+;; Emacs 27 support React JSX syntax out of the box
 (defun my-js-mode-hook ()
   ;; (use-package npm-mode)
   ;; (npm-mode)
@@ -399,8 +406,6 @@
 
 (add-hook 'js-mode-hook 'my-js-mode-hook)
 
-;; (use-package rjsx-mode :defer t)
-
 ;; [ Misc. languages ]
 
 ;; Lisp
@@ -409,6 +414,13 @@
 
 ;; (use-package haskell-mode
 ;;   :mode ("\\.hi\\'" "\\.hs\\'"))
+
+;; (use-package eglot
+;;   :config
+;;   (add-to-list 'eglot-server-programs '(csharp-mode . ("omnisharp")))) ;"--args"))))
+
+(use-package csharp-mode
+  :mode ("\\.cs\\'"))
 
 (use-package elixir-mode
   :mode ("\\.ex\\'" "\\.exs\\'"))
@@ -428,7 +440,7 @@
   (use-package hide-mode-line)
   (add-hook 'vterm-mode-hook #'hide-mode-line-mode)
   :config
-  (setq vterm-shell "/bin/bash")
+  (setq vterm-shell "/bin/zsh")
 
   
   (defun vterm-panel ()
