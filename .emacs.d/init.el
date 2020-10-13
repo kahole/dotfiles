@@ -20,6 +20,8 @@
         ("melpa" . "http://melpa.milkbox.net/packages/"))
       package-archive-priorities '(("melpa-stable" . 15) ("gnu" . 10) ("org" . 5) ("melpa" . 0)))
 
+(require 'package)
+
 ;; for portability to emacs instances without use-package already installed
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
