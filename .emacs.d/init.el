@@ -17,7 +17,7 @@
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa-stable" . "https://stable.melpa.org/packages/")
         ("org" . "https://orgmode.org/elpa/")
-        ("melpa" . "http://melpa.milkbox.net/packages/"))
+        ("melpa" . "http://melpa.org/packages/"))
       package-archive-priorities '(("melpa-stable" . 15) ("gnu" . 10) ("org" . 5) ("melpa" . 0)))
 
 (require 'package)
@@ -336,7 +336,6 @@
 
 (add-hook 'emacs-startup-hook
           (lambda ()
-              (insert-button ";;  - elkjop/todo.org" 'follow-link t 'action (lambda (x) (find-file "~/elkjop/todo.org")))
               (insert-button "\n;;  - todo.org" 'follow-link t 'action (lambda (x) (find-file "~/todo.org")))
               (insert-button "\n;;  - plan.org" 'follow-link t 'action (lambda (x) (find-file "~/netlight/utviklingsplan/plan.org")))
               (insert-button "\n;;  - init.el" 'follow-link t 'action (lambda (x) (find-file user-init-file)))
