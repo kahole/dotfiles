@@ -1,9 +1,7 @@
 {
-    "window.zoomLevel": 1,
     "breadcrumbs.enabled": false,
     "workbench.editor.enablePreviewFromQuickOpen": false,
     "workbench.editor.enablePreview": false,
-    "workbench.statusBar.visible": true,
     "workbench.activityBar.visible": false,
     "workbench.editor.tabSizing": "shrink",
     "editor.minimap.enabled": false,
@@ -21,6 +19,9 @@
     "[csharp]": {
         "editor.formatOnSave": true
     },
+    "[magit]": {
+        // "editor.lineHeight": 15
+    },
     // "editor.renderLineHighlight": "line",
     "vim.easymotion": true,
     "vim.sneak": true,
@@ -32,10 +33,10 @@
     "editor.multiCursorModifier": "alt",
     "csharp.unitTestDebuggingOptions": {
         "env": {
+            // "TZDIR": "/Users/khol/elkjop/timezones"
         }
     },
-    "workbench.editor.showTabs": true,
-    "editor.fontFamily": "Menlo",
+    // "editor.fontFamily": "Monaco, 'Courier New', monospace",
     // "editor.fontWeight": "bold",
     "typescript.updateImportsOnFileMove.enabled": "always",
     "debug.openDebug": "neverOpen",
@@ -46,7 +47,27 @@
     "FSharp.useSdkScripts": true,
     "editor.accessibilitySupport": "off",
     "FSharp.showExplorerOnStartup": false,
-    "workbench.colorTheme": "Gruvbox Dark Hard"
+    "files.associations": {
+        "*.lisp": "clojure"
+    },
+    "rest-client.environmentVariables": {
+
+        "$shared": {},
+        "local": {
+        }
+    },
+    "workbench.colorTheme": "GitHub Light",
+    "editor.fontFamily": "'JetBrains Mono', Menlo, Monaco, 'Courier New', monospace",
+    "editor.fontLigatures": true,
+    "workbench.editorAssociations": {
+        "*.ipynb": "jupyter.notebook.ipynb"
+    },
+    "magit.forge-enabled": true,
+    "workbench.welcomePage.hiddenCategories": [
+        "Beginner",
+        "Setup"
+    ],
+    "window.zoomLevel": 1,
     // "powermode.enabled": true,
     // "powermode.presets": "magic"
 }
