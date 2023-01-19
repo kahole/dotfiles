@@ -31,13 +31,6 @@
     "vim.hlsearch": true,
     "vim.leader": "<space>",
     "editor.multiCursorModifier": "alt",
-    "csharp.unitTestDebuggingOptions": {
-        "env": {
-            // "TZDIR": "/Users/khol/elkjop/timezones"
-        }
-    },
-    // "editor.fontFamily": "Monaco, 'Courier New', monospace",
-    // "editor.fontWeight": "bold",
     "typescript.updateImportsOnFileMove.enabled": "always",
     "debug.openDebug": "neverOpen",
     "csharp.suppressDotnetRestoreNotification": true,
@@ -56,7 +49,7 @@
         "local": {
         }
     },
-    "workbench.colorTheme": "GitHub Light",
+    "workbench.colorTheme": "Gruvbox Dark Hard",
     "editor.fontFamily": "'JetBrains Mono', Menlo, Monaco, 'Courier New', monospace",
     "editor.fontLigatures": true,
     "workbench.editorAssociations": {
@@ -67,7 +60,12 @@
         "Beginner",
         "Setup"
     ],
+    "terminal.integrated.env.osx": {
+        "FIG_NEW_SESSION": "1"
+    },
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "editor.tabSize": 2,
+    "haskell.manageHLS": "PATH",
+    "workbench.startupEditor": "none",
     "window.zoomLevel": 1,
-    // "powermode.enabled": true,
-    // "powermode.presets": "magic"
 }
