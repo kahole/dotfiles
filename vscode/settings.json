@@ -72,4 +72,7 @@
     },
     "editor.tabSize": 2,
     "window.zoomLevel": 1,
+    "eslint.validate": [
+        "javascript", "javascriptreact", "html", "typescriptreact", "typescript"
+    ],
 }
