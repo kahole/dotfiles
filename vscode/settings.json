@@ -1,14 +1,51 @@
 {
-    "breadcrumbs.enabled": false,
+    // [general]
+    "workbench.colorTheme": "Dracula",
+    "window.zoomLevel": 1,
     "workbench.editor.enablePreviewFromQuickOpen": false,
     "workbench.editor.enablePreview": false,
     "workbench.activityBar.visible": false,
     "workbench.editor.tabSizing": "shrink",
+    "breadcrumbs.enabled": false,
+    "debug.openDebug": "neverOpen",
+    "workbench.startupEditor": "readme",
+    "workbench.editorAssociations": {
+        "*.ipynb": "jupyter-notebook"
+    },
+
+    // [editor]
     "editor.minimap.enabled": false,
+    "editor.tabSize": 2,
+    "editor.multiCursorModifier": "alt",
     "editor.linkedEditing": true,
+    "editor.inlineSuggest.enabled": true,
+    "editor.accessibilitySupport": "off",
+    "editor.fontFamily": "'JetBrains Mono', Menlo, Monaco, 'Courier New', monospace",
+    "editor.fontLigatures": true,
+    // "editor.renderLineHighlight": "line",
+
+    "files.associations": {
+        "*.lisp": "clojure"
+    },
+
+    "haskell.manageHLS": "PATH",
+
     "[javascript]": {
         "editor.tabSize": 2
     },
+
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "eslint.validate": [
+        "javascript","javascriptreact", "html", "typescriptreact", "typescript"
+    ],
+
+    "[python]": {
+        "editor.formatOnSave": true,
+        "editor.tabSize": 4,
+        "editor.formatOnType": true
+    },
+
+
     "[json]": {
         "editor.tabSize": 2
     },
@@ -16,65 +53,48 @@
         "editor.tabSize": 2,
         // "editor.formatOnSave": true
     },
+    "typescript.updateImportsOnFileMove.enabled": "always",
+
     "[csharp]": {
         "editor.formatOnSave": true
     },
-    "[magit]": {
-        // "editor.lineHeight": 15
-    },
-    // "editor.renderLineHighlight": "line",
-    "vim.easymotion": true,
-    "vim.sneak": true,
-    "vim.incsearch": true,
-    "vim.useSystemClipboard": true,
-    "vim.useCtrlKeys": true,
-    "vim.hlsearch": true,
-    "vim.leader": "<space>",
-    "editor.multiCursorModifier": "alt",
-    "typescript.updateImportsOnFileMove.enabled": "always",
-    "debug.openDebug": "neverOpen",
+    // [csharp extension]
     "csharp.suppressDotnetRestoreNotification": true,
     "csharp.semanticHighlighting.enabled": true,
     "omnisharp.disableMSBuildDiagnosticWarning": true,
-    "rest-client.enableTelemetry": false,
-    "FSharp.useSdkScripts": true,
-    "editor.accessibilitySupport": "off",
-    "FSharp.showExplorerOnStartup": false,
-    "files.associations": {
-        "*.lisp": "clojure"
+
+    "[magit]": {
+        // "editor.lineHeight": 15
     },
+    "magit.forge-enabled": true,
+
+    // [vim]
+    // "vim.easymotion": true,
+    // "vim.sneak": true,
+    // "vim.incsearch": true,
+    // "vim.useSystemClipboard": true,
+    // "vim.useCtrlKeys": true,
+    // "vim.hlsearch": true,
+    // "vim.leader": "<space>",
+
+    // [rest-client]
+    "rest-client.enableTelemetry": false,
     "rest-client.environmentVariables": {
 
         "$shared": {},
         "local": {
         }
     },
-    "workbench.colorTheme": "Dracula",
-    "editor.fontFamily": "'JetBrains Mono', Menlo, Monaco, 'Courier New', monospace",
-    "editor.fontLigatures": true,
-    "workbench.editorAssociations": {
-        "*.ipynb": "jupyter.notebook.ipynb"
-    },
-    "magit.forge-enabled": true,
-    "workbench.welcomePage.hiddenCategories": [
-        "Beginner",
-        "Setup"
-    ],
-    "terminal.integrated.env.osx": {
-        "FIG_NEW_SESSION": "1"
-    },
-    "javascript.updateImportsOnFileMove.enabled": "always",
-    "haskell.manageHLS": "PATH",
-    "workbench.startupEditor": "none",
-    "[python]": {
-        "editor.formatOnSave": true,
-        "editor.tabSize": 4,
-        "editor.formatOnType": true
-    },
-    "editor.tabSize": 2,
-    "window.zoomLevel": 1,
-    "eslint.validate": [
-        "javascript", "javascriptreact", "html", "typescriptreact", "typescript"
-    ],
-    "editor.inlineSuggest.enabled": true,
+
+    // [indent-rainbow]
+    "indentRainbow.indicatorStyle": "light",
+    // we use a simple 1 pixel wide line
+    "indentRainbow.lightIndicatorStyleLineWidth": 1,
+    // the same colors as above but more visible
+    "indentRainbow.colors": [
+        "rgba(255,255,64,0.3)",
+        "rgba(127,255,127,0.3)",
+        "rgba(255,127,255,0.3)",
+        "rgba(79,236,236,0.3)"
+    ]
 }
