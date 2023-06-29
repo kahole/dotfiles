@@ -5,6 +5,7 @@
     "workbench.activityBar.visible": false,
     "workbench.editor.tabSizing": "shrink",
     "editor.minimap.enabled": false,
+    "editor.linkedEditing": true,
     "[javascript]": {
         "editor.tabSize": 2
     },
@@ -48,7 +49,7 @@
         "local": {
         }
     },
-    "workbench.colorTheme": "Dracula At Night",
+    "workbench.colorTheme": "Dracula",
     "editor.fontFamily": "'JetBrains Mono', Menlo, Monaco, 'Courier New', monospace",
     "editor.fontLigatures": true,
     "workbench.editorAssociations": {
@@ -75,4 +76,5 @@
     "eslint.validate": [
         "javascript", "javascriptreact", "html", "typescriptreact", "typescript"
     ],
+    "editor.inlineSuggest.enabled": true,
 }
