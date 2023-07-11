@@ -11,7 +11,3 @@ gsettings set org.gnome.Terminal.Legacy.Keybindings:/org/gnome/terminal/legacy/k
 ## Disable emoji hotkey
 gsettings set org.freedesktop.ibus.panel.emoji hotkey "['']"
 
-## Aliases ##
-
-alias copy='xclip -sel clip'
-
